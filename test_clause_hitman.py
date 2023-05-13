@@ -206,6 +206,16 @@ def main():
     print(len(clause_2_garde))
     print(len(clause_2_garde_v1))
     
+    print(clause_2_garde_v1[0])
+    #[['-00_G', '-01_G', '-02_G'], ['-00_G', '-01_G', '-03_G']]
+    print(dict_var_to_num["00_G"],dict_var_to_num["01_G"],dict_var_to_num["02_G"],"\n")
+    print(clause_2_garde[0])
+
+    clause_1_garde = exactly_k(1,recup_var_G(l_var,dict_var_to_num))
+    # 2 parmis 40 780 + 1
+    print(len(clause_1_garde))
+
+    
     pass
 
 
