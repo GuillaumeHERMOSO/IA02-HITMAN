@@ -40,7 +40,7 @@ def creer_list_var(m,n):
     list_cases = []
     for i in range(0,m):
         for j in range(0,n):
-            for reste in ["V","M","C","D","T","I_N","I_S","I_E","I_O","G_N","G_S","G_E","G_O"]:
+            for reste in ["V","M","C","D","T","I","I_N","I_S","I_E","I_O","G","G_N","G_S","G_E","G_O"]:
                 list_cases.append("%d%d_%s"%(i,j,reste))
     return list_cases
 #print(creer_list_var(m=2,n=2))
@@ -173,17 +173,38 @@ def clause_un_deguisement(m,n):
         r.append([x for x in tab])
     return r
 
+def recup_var_G(list_cases,dict_var_to_num):
+    var = []
+    for i in list_cases:
+        #on recupere les variables du type 00_G mais pas 00_G_N
+        if i[-1] == "G" :
+            var.append(dict_var_to_num[i])
+
+    return var
+
+def exactly_k(k: int, variables: List[PropositionnalVariable]) -> ClauseBase:
+    r: ClauseBase = []
+    for tab in combinations(variables, k+1):
+        r.append([-x for x in tab])
+    for tab in combinations(variables, len(variables)+1-k):
+        r.append([x for x in tab])
+    return r
 
 def main():
     m=5
     n=8
+    l_var = creer_list_var(m,n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(l_var)
 
-    cl = clause_une_cible(5,8)
-    cl += clause_il_y_a_K_invite(5,8,3)
-    cl += clause_il_y_a_K_garde(5,8,2)
-    cl += clause_une_corde(5,8)
-    cl += clause_un_deguisement(5,8)
-    print(len(cl))
+    print(recup_var_G(l_var,dict_var_to_num))
+    for i in recup_var_G(l_var,dict_var_to_num):
+        key = [k  for (k, val) in dict_var_to_num.items() if val == i]
+        print(key)
+
+    clause_2_garde = exactly_k(2,recup_var_G(l_var,dict_var_to_num))
+    clause_2_garde_v1 = clause_il_y_a_K_garde(m,n,2)
+    print(len(clause_2_garde))
+    print(len(clause_2_garde_v1))
     
     pass
 
