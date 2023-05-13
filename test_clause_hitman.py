@@ -1,5 +1,14 @@
 from pprint import pprint
 from time import sleep
+from typing import List, Tuple
+import subprocess
+from itertools import combinations
+Grid = List[List[int]]
+PropositionnalVariable = int
+Literal = int
+Clause = List[Literal]
+ClauseBase = List[Clause]
+Model = List[Literal]
 
 #map m*n de taille
 
@@ -58,19 +67,8 @@ def creer_dictionnaire_cases_par_list(list_variable):
 #print(creer_dictionnaire_cases_par_dico(creer_dico_var(m=2,n=2)))
 #print(creer_dictionnaire_cases_par_list(creer_list_var(m=2,n=2)))
 
-from typing import List, Tuple
-import subprocess
-from itertools import combinations
-Grid = List[List[int]]
-PropositionnalVariable = int
-Literal = int
-Clause = List[Literal]
-ClauseBase = List[Clause]
-Model = List[Literal]
-
 def at_least_one(v: List[PropositionnalVariable]) -> Clause:
     return v
-
 
 def unique(variables: List[PropositionnalVariable]) -> ClauseBase:
     r: ClauseBase = [at_least_one(variables)]
@@ -79,6 +77,33 @@ def unique(variables: List[PropositionnalVariable]) -> ClauseBase:
     print(r)
     return r
 
+#### fonctions fournies
+
+def write_dimacs_file(dimacs: str, filename: str):
+    with open(filename, "w", newline="") as cnf:
+        cnf.write(dimacs)
+
+def exec_gophersat(
+    filename: str, cmd: str = "gophersat", encoding: str = "utf8"
+) -> Tuple[bool, List[int]]:
+    result = subprocess.run(
+        [cmd, filename], capture_output=True, check=True, encoding=encoding
+    )
+    string = str(result.stdout)
+    lines = string.splitlines()
+
+
+    if lines[1] != "s SATISFIABLE":
+        return False, []
+
+
+    model = lines[2][2:-2].split(" ")
+
+
+    return True, [int(x) for x in model]
+
+
+#clause verité sur le monde
 def clause_il_y_a_K_garde(m,n,k):
     #variables = ["00","01", .."08","10","11",..."18",..."57","58"]
     variables = []
@@ -93,8 +118,6 @@ def clause_il_y_a_K_garde(m,n,k):
     for tab in combinations(variables, len(variables)+1-k):
         r.append([x for x in tab])
     return r
-
-
 
 def clause_il_y_a_K_invite(m,n,k):
         #variables = ["00","01", .."08","10","11",..."18",..."57","58"]
@@ -150,12 +173,20 @@ def clause_un_deguisement(m,n):
         r.append([x for x in tab])
     return r
 
-m=5
-n=8
 
-cl = clause_une_cible(5,8)
-cl += clause_il_y_a_K_invite(5,8,3)
-cl += clause_il_y_a_K_garde(5,8,2)
-cl += clause_une_corde(5,8)
-cl += clause_un_deguisement(5,8)
-print(len(cl))
+def main():
+    m=5
+    n=8
+
+    cl = clause_une_cible(5,8)
+    cl += clause_il_y_a_K_invite(5,8,3)
+    cl += clause_il_y_a_K_garde(5,8,2)
+    cl += clause_une_corde(5,8)
+    cl += clause_un_deguisement(5,8)
+    print(len(cl))
+    
+    pass
+
+
+if __name__ == "__main__":
+    main()
