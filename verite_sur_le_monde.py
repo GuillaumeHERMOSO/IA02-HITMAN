@@ -5,6 +5,7 @@ import subprocess
 from itertools import combinations
 
 from test_clause_hitman import *
+from affichage import *
 
 Grid = List[List[int]]
 PropositionnalVariable = int
@@ -95,9 +96,10 @@ def clauses_to_dimacs(clauses: ClauseBase, nb_vars: int) -> str:
     return r
 
 
+
+
 def main():
     list_var = creer_list_var(5,8)
-
     dico_var_to_num = creer_dictionnaire_cases_par_list(list_var)
 
     #on recupere les variables
@@ -128,7 +130,10 @@ def main():
     #print(dimac)
     write_dimacs_file(dimac, "./test.cnf")
     res = exec_gophersat( "test.cnf")
+    
     print(res)
+    model_to_grid(res[1],5,8,list_var)
+
     pass
 
 
