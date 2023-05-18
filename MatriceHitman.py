@@ -41,9 +41,6 @@ def main():
     matrice_vide.ajout_connaissance(1, 1, "M")
     matrice_vide.afficher_matrice()
 
-    print(matrice_vide)
-
-
     pass
 
 

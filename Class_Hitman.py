@@ -1,3 +1,5 @@
+from pprint import pprint
+import random
 from MatriceHitman import MatriceHitman
 
 class Hitman:
@@ -29,46 +31,40 @@ class Hitman:
         self.orientation = orientation
         pass
     
-    def deplacement_possible(self):
+    def avancer_possible(self):
         #TODO on peut avancer si il n'y a pas de mur, ni de garde, ni de bordure de map.
-
+        possible =["V","I"]
         if self.orientation == "N":
-            if self.position[0] == 0:
-                return False
-            elif self.matrice[self.position[0]-1][self.position[1]] in ["M","G","G_N","G_S","G_E","G_O"]:
-                return False
-            else:
+            if self.matrice.matrice[self.position[0]+1][self.position[1]] in possible:
                 return True
+            else:
+                return False
         elif self.orientation == "S":
-            if self.position[0] == self.matrice.nb_lignes-1:
-                return False
-            elif (self.matrice[self.position[0]+1][self.position[1]] in ["M","G","G_N","G_S","G_E","G_O"]):
-                return False
-            else:
+            if self.matrice.matrice[self.position[0]-1][self.position[1]] in possible:
                 return True
+            else:
+                return False
         elif self.orientation == "E":
-            if self.position[1] == self.matrice.nb_colonnes-1:
-                return False
-            elif self.matrice[self.position[0]][self.position[1]+1] in ["M","G","G_N","G_S","G_E","G_O"]:
-                return False
-            else:
+            if self.matrice.matrice[self.position[0]][self.position[1]+1] in possible:
                 return True
+            else:
+                return False
         elif self.orientation == "O":
-            if self.position[1] == 0:
-                return False
-            elif self.matrice[self.position[0]][self.position[1]-1] in ["M","G","G_N","G_S","G_E","G_O"]:
-                return False
-            else:
+            if self.matrice.matrice[self.position[0]][self.position[1]-1] in possible:
                 return True
+            else:
+                return False
+        
         pass
 
     def avancer(self):
         print(f"Hitman est en {self.position} et regarde vers {self.orientation}")
-        if (self.deplacement_possible()):
+        #la matrice est inversé ( le nord est en bas )
+        if (self.avancer_possible()):
             if self.orientation == "N":
-                self.position[0] -= 1
-            elif self.orientation == "S":
                 self.position[0] += 1
+            elif self.orientation == "S":
+                self.position[0] -= 1
             elif self.orientation == "E":
                 self.position[1] += 1
             elif self.orientation == "O":
@@ -99,7 +95,37 @@ class Hitman:
             self.orientation = "N"
         pass
 
+    def get_info(self):
+        #TODO arbitre nous donne les infos
+        pass
 
+    def action_random(self):
+        nombre = random.randint(0, 3)
+        if nombre == 0:
+            self.avancer()
+        elif nombre == 1:
+            self.regarder_droite()
+        elif nombre == 2:
+            self.regarder_gauche()
+        pass
+
+    def tour(self):
+        #On est sur une case on a des infos, on modifie nos connaissance, on choisit une action
+        
+        for i,j,val in get_info():
+            self.matrice.ajout_connaissance(i,j,val)
+        action_random()
+        pass
+
+def generer_matrice_aleatoire(m,n, nbr_G, nbr_I):
+    elements = [" C "," D "]
+    elements += [random.choice(["G_N", "G_O", "G_S", "G_E"]) for _ in range(nbr_G)]
+    elements += [random.choice(["I_N", "I_O", "I_S", "I_E"]) for _ in range(nbr_G)]
+    r = m*n - len(elements)
+    elements += [random.choice([" V "," V "," M "]) for _ in range(r)]
+    random.shuffle(elements)
+    mat =[[elements.pop() for _ in range(n)] for _ in range(m)]
+    return mat
 
 def main():
     hitman = Hitman(3, 4)
@@ -107,10 +133,25 @@ def main():
     hitman.matrice.ajout_connaissance(1, 1, "M")
     hitman.matrice.afficher_matrice()
     hitman.avancer()
+    print(hitman.position)
+
     hitman.matrice.afficher_matrice()
     hitman.regarder_droite()
     hitman.avancer()
-    hitman.matrice.afficher_matrice()
+    print(hitman.position)
+
+    hitman.regarder_droite()
+    hitman.avancer()
+    print(hitman.position)
+
+
+    print("\n\n")
+    matrice_aleatoire = generer_matrice_aleatoire(4,3, 1, 1)
+    pprint(matrice_aleatoire)
+
+    test =MatriceHitman(4,3)
+    test.matrice = matrice_aleatoire
+    test.afficher_matrice()
     pass
 
 if __name__ == "__main__":
