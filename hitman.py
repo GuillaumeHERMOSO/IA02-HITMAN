@@ -205,7 +205,7 @@ class HitmanReferee:
 
         return count
 
-    def __get_offset(self):
+    def __get_offset(self): # Retourne la position en un tuple X,Y (Le nord et l'est étant les valeurs positives)
         if self.__orientation == HC.N:
             offset = 0, 1
         elif self.__orientation == HC.E:
@@ -226,11 +226,12 @@ class HitmanReferee:
             pos = x + offset_x, y + offset_y
             x, y = pos
             if x >= self.__n or y >= self.__m or x < 0 or y < 0:
-                break
-            vision.append((pos, self.__get_world_content(x, y)))
+                break # Si Hitman est face à un mur et qu'il regarde dans la direction de celui-ci il va arreter la boucle
+            vision.append((pos, self.__get_world_content(x, y))) # vision est un tableau 3x2 ayant dans
+            #dans la première colonnne la position de la case vue et dans la 2e le contenu de celle-ci
             if vision[-1][1] != HC.EMPTY:
-                break
-        return vision
+                break # Si Hitman voit quelque chose il arrete de voir au dela
+        return vision # retourne une liste de taille 3 au maximum
 
     def move(self):
         offset_x, offset_y = self.__get_offset()

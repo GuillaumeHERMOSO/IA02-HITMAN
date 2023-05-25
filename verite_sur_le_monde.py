@@ -4,7 +4,7 @@ from typing import List, Tuple
 import subprocess
 from itertools import combinations
 
-from test_clause_hitman import *
+from contraintes import *
 from affichage import *
 
 Grid = List[List[int]]
@@ -73,13 +73,7 @@ def gen_clause_lettre_equi_lettre_orientation(m,n,dict_var_to_num,lettre : str):
         r.append([-var_l_O[i],var_l[i]])
     return r
 
-def exactly_k(k: int, variables: List[PropositionnalVariable]) -> ClauseBase:
-    r: ClauseBase = []
-    for tab in combinations(variables, k+1):
-        r.append([-x for x in tab])
-    for tab in combinations(variables, len(variables)+1-k):
-        r.append([x for x in tab])
-    return r
+
 
 #Écrire une fonction clauses_to_dimacs(clauses: ClauseBase, nb_vars: int) -> str qui,
 #étant donné une base de clauses et le nombre de variables à considérer, renvoie une

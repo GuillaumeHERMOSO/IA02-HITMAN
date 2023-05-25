@@ -83,13 +83,7 @@ def recup_var_G(list_cases,dict_var_to_num):
 
     return var
 
-def exactly_k(k: int, variables: List[PropositionnalVariable]) -> ClauseBase:
-    r: ClauseBase = []
-    for tab in combinations(variables, k+1):
-        r.append([-x for x in tab])
-    for tab in combinations(variables, len(variables)+1-k):
-        r.append([x for x in tab])
-    return r
+
 
 def main():
     
