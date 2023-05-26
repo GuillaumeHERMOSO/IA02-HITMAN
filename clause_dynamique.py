@@ -69,6 +69,36 @@ def recup_var_G(list_cases,dict_var_to_num):
             var.append(dict_var_to_num[i])
 
     return var
+def orientation_garde(garde):
+    if garde == HC.GUARD_N:
+        offset = 0, 1
+    elif garde == HC.GUARD_E:
+        offset = 1, 0
+    elif garde == HC.GUARD_S:
+        offset = 0, -1
+    elif garde == HC.GUARD_W:
+        offset = -1, 0
+
+    return offset
+
+def ajout_vision_garde (dico,pos,garde,dico_connaissance,matrice_vision) : # on incremente les case vu dans la matrice
+    n = dico["n"]
+    m = dico["m"]
+    offset_x, offset_y = orientation_garde(garde)
+    x, y = pos
+    vision = []
+    for _ in range(0, 2):
+        pos = x + offset_x, y + offset_y
+        x, y = pos
+        if x >= n or y >= m or x < 0 or y < 0:
+            break
+        vision.append(pos)
+        if dico_connaissance[pos] != HC.EMPTY: # Si dans notre matrice de connaissance
+                                                # on sait ce qu'il y a a la 2e case du champ de vision du garde
+            break
+    for x,y in vision :
+        matrice_vision[x][y] += 1
+    return matrice_vision
 
 
 def main():
