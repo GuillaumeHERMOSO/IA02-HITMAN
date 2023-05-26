@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="Update">
+    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="Ajout de la vision des gardes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clause_dynamique.py" beforeDir="false" afterPath="$PROJECT_DIR$/clause_dynamique.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +62,7 @@
       <workItem from="1684161718662" duration="104000" />
       <workItem from="1684948954651" duration="9361000" />
       <workItem from="1685034600831" duration="270000" />
-      <workItem from="1685081447186" duration="4409000" />
+      <workItem from="1685081447186" duration="10836000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1685034653894</created>
@@ -70,7 +71,21 @@
       <option name="project" value="LOCAL" />
       <updated>1685034653894</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Ajout de la vision des gardes">
+      <created>1685086803933</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685086803933</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Ajout de la vision des gardes">
+      <created>1685086879192</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1685086879192</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -89,7 +104,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update" />
+    <MESSAGE value="Ajout de la vision des gardes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de la vision des gardes" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/IA02_HITMAN$verite_sur_le_monde.coverage" NAME="verite_sur_le_monde Coverage Results" MODIFIED="1684133559208" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

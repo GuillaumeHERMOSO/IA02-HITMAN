@@ -6,7 +6,7 @@ from itertools import combinations
 
 from contraintes import *
 
-from hitman import HC, HitmanReferee
+from hitman import HC,HitmanReferee
 
 Grid = List[List[int]]
 PropositionnalVariable = int
@@ -50,10 +50,9 @@ def ecouter(dico,dict_var_to_num) : # ecouter avec l'arbitre
 
     return exactly_k(k,r)  # Si on entend moins de 5 personnes
 
-def voir(dico,dict_var_to_num) : # Voir comme on le pense maintenant ( avec l'arbitre )
-    liste = dico["vision"]
+def voir(dico,dict_var_to_num) : # Voir pour le sat
     variables = []
-    for pos,valeur in liste :
+    for pos,valeur in dico["vision"] :
         x,y = pos
         variables.append(dict_var_to_num[f"{x}{y}_{valeur}"])  # Transformation en valeurs utilisable dans SAT
     return variables
@@ -93,12 +92,93 @@ def ajout_vision_garde (dico,pos,garde,dico_connaissance,matrice_vision) : # on 
         if x >= n or y >= m or x < 0 or y < 0:
             break
         vision.append(pos)
-        if dico_connaissance[pos] != HC.EMPTY: # Si dans notre matrice de connaissance
+        if dico_connaissance[pos] != HC.EMPTY and matrice_vision[x][y] == 0: # Si dans notre matrice de connaissance
                                                 # on sait ce qu'il y a a la 2e case du champ de vision du garde
             break
     for x,y in vision :
         matrice_vision[x][y] += 1
     return matrice_vision
+
+def maj_dico_connaissance(dico_connaissance,dico) : # Voir pour notre dico
+    for pos, valeur in  dico["vision"]:
+        dico_connaissance[pos] = valeur
+    return dico_connaissance
+
+def maj_fichier_sat_vision(dico) :
+    # mise a jour du fichier sat en appelant voir
+def avancer(dico,dico_connaissance,matrice_vision) :
+    x,y = dico["position"]
+    n = dico["n"]
+    m = dico["m"]
+    pos = x,y
+    compteur = []
+    if dico["orientation"] == HC.N:
+        orientation = 0, 1
+    elif dico["orientation"] == HC.E:
+        orientation = 1, 0
+    elif dico["orientation"] == HC.S:
+        orientation = 0, -1
+    elif dico["orientation"] == HC.W:
+        orientation = -1, 0
+
+    if x<n and dico_connaissance[(x + 1, y)] == "Vide" : # Si le nord est inconnu
+        if orientation == (1, 0):  # Si à l'est
+            dico = HitmanReferee.turn_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+        else:  # Si Ouest ou Sud(opposé de nord )
+            dico = HitmanReferee.turn_anti_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+
+    if x>0 and dico_connaissance[(x - 1, y)] == "Vide": # Si le sud est inconnu
+        if orientation == (-1, 0):  # Si à l'ouest
+            dico = HitmanReferee.turn_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+        else:  # Si Est ou nord(opposé de sud )
+            dico = HitmanReferee.turn_anti_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+
+
+    if y<m and dico_connaissance[(x, y+1)] == "Vide": # Si l'est est inconnu
+        if orientation == (0, 1):  # Si au Nord
+            dico = HitmanReferee.turn_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+
+        else:  # Si Sud ou Ouest(opposé de l'est )
+            dico = HitmanReferee.turn_anti_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+
+
+    if y>0 and dico_connaissance[(x, y - 1)] == "Vide": # Si l'ouest est inconnu
+        if orientation == (0, -1):  # Si au Sud
+            dico = HitmanReferee.turn_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+
+        else:  # Si Nord ou Est (opposé de l'ouest )
+            dico = HitmanReferee.turn_anti_clockwise()
+            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
+            maj_fichier_sat_vision(dico)
+
+    # Normalement d'ici on a toutes les données des 4 orientations
+
+    if orientation == (0,1) and x<n and matrice_vision[x+1][y] == 0 and dico_connaissance[(x+1,y)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
+        return HitmanReferee.move()
+    if orientation == (0,-1) and x>0 and matrice_vision[x-1][y] == 0 and dico_connaissance[(x-1,y)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
+        return HitmanReferee.move()
+    if orientation == (1,0) and y<m and matrice_vision[x][y+1] == 0 and dico_connaissance[(x,y+1)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
+        return HitmanReferee.move()
+    if orientation == (-1,0) and y>0 and matrice_vision[x][y-1] == 0 and dico_connaissance[(x,y-1)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
+        return HitmanReferee.move()
+
+    return dico
+
+
 
 
 def main():
