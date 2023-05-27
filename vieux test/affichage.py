@@ -1,6 +1,6 @@
-from clause_dynamique import *
+from src.clause_dynamique import *
 from test_clause_hitman import *
-from verite_sur_le_monde import *
+from src.clause_verite_sur_le_monde import *
 Grid_str = List[List[str]]
 
 #model de la forme [-1, -2, -3, ...,-141, -142, -143, -144, 145, -146]

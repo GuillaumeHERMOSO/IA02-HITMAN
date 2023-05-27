@@ -1,8 +1,6 @@
-from pprint import pprint
-from time import sleep
-from typing import List, Tuple
-import subprocess
+from typing import List
 from itertools import combinations
+
 Grid = List[List[int]]
 PropositionnalVariable = int
 Literal = int
@@ -12,6 +10,7 @@ Model = List[Literal]
 
 
 def exactly_k(k: int, variables: List[PropositionnalVariable]) -> ClauseBase:
+    """ Retourne l'ensemble de clause traitant la contrainte : "exactement n variables vraies dans la liste"""
     r: ClauseBase = []
     for tab in combinations(variables, k+1):
         r.append([-x for x in tab])
@@ -20,9 +19,8 @@ def exactly_k(k: int, variables: List[PropositionnalVariable]) -> ClauseBase:
     return r
 
 
-
-#retourne l'ensemble de clause traitant la contrainte : "au moins n variables vraies dans la liste"
 def at_least_k(k: int, variables: List[PropositionnalVariable]) -> ClauseBase:
+    """ Retourne l'ensemble de clause traitant la contrainte : "au moins n variables vraies dans la liste"""
     r: ClauseBase = []
     for tab in combinations(variables, len(variables)+1-k):
         r.append([x for x in tab])

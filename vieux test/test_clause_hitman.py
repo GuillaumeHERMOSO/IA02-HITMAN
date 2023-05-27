@@ -53,8 +53,7 @@ def write_dimacs_file(dimacs: str, filename: str):
         cnf.write(dimacs)
 
 def exec_gophersat(
-    filename: str, cmd: str = "gophersat", encoding: str = "utf8"
-) -> Tuple[bool, List[int]]:
+    filename: str, cmd: str = "gophersat", encoding: str = "utf8") -> Tuple[bool, List[int]]:
     result = subprocess.run(
         [cmd, filename], capture_output=True, check=True, encoding=encoding
     )
