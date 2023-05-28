@@ -25,9 +25,49 @@ class HitmanKnowledge:
         self.m = m
         self.n = n
         self.knowledge = {}
+        self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
+    
+    def has_knowledge(self, i: int, j: int) -> bool:
+        return (i, j) in self.knowledge
+    
+    def orientation_garde(self,garde):
+
+        if garde == HC.GUARD_N:
+            offset = 0, 1
+        elif garde == HC.GUARD_E:
+            offset = 1, 0
+        elif garde == HC.GUARD_S:
+            offset = 0, -1
+        elif garde == HC.GUARD_W:
+            offset = -1, 0
+        return offset
+    
+    def maj_vision_garde (self) :
+        """ Mettre a jour la matrice de vision des gardes """
+        self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
+        for position in self.knowledge:
+            vision = []
+            if self.knowledge[position] in [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W]:
+                offset_x, offset_y = self.orientation_garde(self.knowledge[position])
+                x,y = position
+                for _ in range(0, 2):
+                    pos = x + offset_x, y + offset_y
+                    x, y = pos
+                    if x >= self.n or y >= self.m or x < 0 or y < 0:
+                        break
+                    vision.append(pos)
+                    if (self.has_knowledge(x,y) and self.knowledge[pos] != HC.EMPTY):
+                        break
+                for pos in vision:
+                    self.matrice_vision[pos] += 1
+        pass
 
     def add_knowledge(self, position: Tuple[int, int], content: HC):
-        self.knowledge[position] = content
+        if (not self.has_knowledge(position[0], position[1])):
+            self.knowledge[position] = content
+            self.maj_vision_garde()
+        else:
+            print("Erreur : la position est déjà connue")
 
     def get_knowledge(self, position: Tuple[int, int]) -> HC:
         return self.knowledge.get(position, HC.EMPTY)
@@ -35,21 +75,40 @@ class HitmanKnowledge:
     def get_all_knowledge(self) -> Dict[Tuple[int, int], HC]:
         return self.knowledge
 
-    def has_knowledge(self, i: int, j: int) -> bool:
-        return (i, j) in self.knowledge
+
     
 
+                
+
     def __str__(self) -> str:
-        """Affichage de la matrice de connaissance avec 0,0 en bas à gauche et m,n en haut à droite, si il y a rien on affiche x"""
+        """Affichage de la matrice de connaissance avec 0,0 en bas à gauche, en haut a gauche (0,m) et (n,m) en haut à droite, si il y a rien on affiche x"""
         r =""
-        for i in reversed(range(self.m)):
-            for j in range(self.n):
+        for j in range(self.m-1,-1,-1):
+            r += str(j) + "      "
+            for i in range(self.n):
                 if self.has_knowledge(i,j):
                     #format permet d'avoir la meme taille pour chaque case  max 10 caractere, ^ pour centrer
-                    r += format(self.get_knowledge((i,j)).name,"^7") +" "
+                    r += format(self.get_knowledge((i,j)).name,"^11") +" "
                     
                 else:
-                    r += format("x","^7") +" "
+                    r += format("x","^11") +" "
             r +="\n"
+        # affichage des indices en bas 0,1, ... , n-1
+        r += "       " + " ".join([format(str(i),"^11") for i in range(self.n)])
         return r
+    
+    def affichage_vison(self):
+        r =""
+        for j in range(self.m-1,-1,-1):
+            r += str(j) + "      "
+            for i in range(self.n):
+                r += format(self.matrice_vision[(i,j)],"^11") +" "
+            r +="\n"
+        # affichage des indices en bas 0,1, ... , n-1
+        r += "       " + " ".join([format(str(i),"^11") for i in range(self.n)])
+        print (r)
+        pass
+
+    
+
 

@@ -5,13 +5,7 @@ from src.Class_HitmanKnowledge import *
 
 
 def main():
-    Knowledge = HitmanKnowledge(4,4)
-    print(Knowledge)
-    Knowledge.add_knowledge((0,0),HC.GUARD_N)
-    print(Knowledge)
-    Knowledge.add_knowledge((1,1),HC.SUIT)
-    print(Knowledge)
-
+    
 
     hr = HitmanReferee()
     status = hr.start_phase1()
@@ -20,6 +14,28 @@ def main():
     n = status["n"]
     m = status["m"]
 
+    Knowledge = HitmanKnowledge(m,n)
+
+    Knowledge.add_knowledge((0,0),HC.GUARD_N)
+    print(Knowledge)
+    print()
+    Knowledge.affichage_vison()
+
+
+    Knowledge.add_knowledge((0,5),HC.GUARD_S)
+    print(Knowledge)
+    print()
+    Knowledge.affichage_vison()
+
+    Knowledge.add_knowledge((0,1),HC.PIANO_WIRE)
+    print(Knowledge)
+    print()
+    Knowledge.affichage_vison()
+
+    Knowledge.add_knowledge((0,0),HC.GUARD_N)
+
+
+    """
     nbr_P = status["civil_count"] + status["guard_count"]
 
     list_var = creer_list_var(m,n)
@@ -38,7 +54,7 @@ def main():
     
     res = exec_gophersat( "test2.cnf")
     print(res)
-
+    """
 
     pass
 
