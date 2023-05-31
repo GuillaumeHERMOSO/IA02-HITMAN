@@ -112,6 +112,11 @@ class HitmanKnowledge:
         print (r)
         pass
 
+    def ajout_voir_knowledge(self, status: Dict, dict_var_to_num : Dict[str, int]):
+        for pos,valeur in status["vision"] :
+            self.add_knowledge(pos,valeur)
+        pass
+
     
 
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:

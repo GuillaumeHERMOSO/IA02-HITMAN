@@ -65,6 +65,16 @@ def main():
     pprint(Knowledge.get_all_knowledge())
     r = knowledge_to_clause_personne(Knowledge.get_all_knowledge(),dict_var_to_num)
     print(r)
+
+
+    Knowledge = HitmanKnowledge(m,n)
+    list_var = creer_list_var(m,n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
+
+    status = hr.move()
+    pprint(status)
+    Knowledge.ajout_voir_knowledge(status, dict_var_to_num)
+    print(Knowledge)
     pass
 
 if __name__ == "__main__":
