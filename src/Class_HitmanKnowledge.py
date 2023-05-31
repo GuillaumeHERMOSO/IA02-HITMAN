@@ -30,7 +30,7 @@ class HitmanKnowledge:
         self.m = m
         self.n = n
         self.knowledge = {}
-        self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
+        self.matrice_vision = {}
     
     def has_knowledge(self, i: int, j: int) -> bool:
         return (i, j) in self.knowledge
@@ -49,6 +49,8 @@ class HitmanKnowledge:
     
     def maj_vision_garde (self) :
         """ Mettre a jour la matrice de vision des gardes """
+        #TODO voir si on peut faire autrement pour ne pas tt init
+
         self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
         for position in self.knowledge:
             vision = []
@@ -112,7 +114,7 @@ class HitmanKnowledge:
         print (r)
         pass
 
-    def ajout_voir_knowledge(self, status: Dict, dict_var_to_num : Dict[str, int]):
+    def ajout_voir_knowledge(self, status: Dict):
         for pos,valeur in status["vision"] :
             self.add_knowledge(pos,valeur)
         pass
