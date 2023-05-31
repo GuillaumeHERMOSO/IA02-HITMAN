@@ -129,5 +129,22 @@ def main():
     pass
 
 
+def main2() :
+    hr = HitmanReferee()
+    status = hr.start_phase1()
+    n = status["n"]
+    m = status["m"]
+    nbr_P = status["civil_count"] + status["guard_count"]
+    list_var = creer_list_var(m, n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
+    V_sur_le_monde: ClauseBase = []
+    V_sur_le_monde += exactly_k(nbr_P, gen_var_lettre(m, n, dict_var_to_num, "P"))
+    write_dimacs_file2(clauses=V_sur_le_monde, nb_vars=len(list_var), filename="./test2.cnf")
+    res = exec_gophersat("test2.cnf")
+    print(res)
+    # test_deduction("C:\\Users\\jawed\\Documents\\GitHub\\IA02-HITMAN\\test2.cnf", 1)
+
+
 if __name__ == "__main__":
+    #main2()
     main()
