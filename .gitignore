@@ -3,3 +3,4 @@
 gophersat.exe
 *.pyc
 .idea
+*.cnf
