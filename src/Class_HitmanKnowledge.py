@@ -36,7 +36,6 @@ class HitmanKnowledge:
         return (i, j) in self.knowledge
     
     def orientation_garde(self,garde):
-
         if garde == HC.GUARD_N:
             offset = 0, 1
         elif garde == HC.GUARD_E:
@@ -136,7 +135,7 @@ def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var
         #print(v)
         if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W]:
             #print(f"{i[0]}{i[1]}_P")
-            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"])
+            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
     return r
 
 

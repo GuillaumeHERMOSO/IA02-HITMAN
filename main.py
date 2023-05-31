@@ -1,7 +1,30 @@
+import os
+import random
+from typing import List, Tuple
 from src.arbitre.hitman import *
 from src.clause_dynamique import *
 from src.clause_verite_sur_le_monde import *
 from src.Class_HitmanKnowledge import *
+
+class HC(Enum): 
+    EMPTY = 1
+    WALL = 2
+    GUARD_N = 3
+    GUARD_E = 4
+    GUARD_S = 5
+    GUARD_W = 6
+    CIVIL_N = 7
+    CIVIL_E = 8
+    CIVIL_S = 9
+    CIVIL_W = 10
+    TARGET = 11
+    SUIT = 12
+    PIANO_WIRE = 13
+    N = 14
+    E = 15
+    S = 16
+    W = 17
+
 
 def trois_six(hr : HitmanReferee, know : HitmanKnowledge):
     status = hr.turn_clockwise()
@@ -14,43 +37,25 @@ def trois_six(hr : HitmanReferee, know : HitmanKnowledge):
     know.ajout_voir_knowledge(status)
     print(know)
     print(status["position"])
+    pass
 
+def orientation_hitman(status :Dict):
+    orientation :HC  = status["orientation"]
+    if orientation.name == HC.N.name:
+        offset = 0, 1
+    elif orientation.name is HC.E.name:
+        offset = 1, 0
+    elif orientation.name is HC.S.name:
+        offset = 0, -1
+    elif orientation.name is HC.W.name:
+        offset = -1, 0
+    return offset
 
 
 def main():
     
     """
-    hr = HitmanReferee()
-    status = hr.start_phase1()
-    pprint(status)
-
-    n = status["n"]
-    m = status["m"]
-
-    Knowledge = HitmanKnowledge(m,n)
-
-    Knowledge.add_knowledge((0,0),HC.GUARD_N)
-    print(Knowledge)
-    print()
-    Knowledge.affichage_vison()
-
-
-    Knowledge.add_knowledge((0,5),HC.GUARD_S)
-    print(Knowledge)
-    print()
-    Knowledge.affichage_vison()
-
-    Knowledge.add_knowledge((0,1),HC.PIANO_WIRE)
-    print(Knowledge)
-    print()
-    Knowledge.affichage_vison()
-
-    Knowledge.add_knowledge((0,0),HC.GUARD_N)
-
-
-    
     nbr_P = status["civil_count"] + status["guard_count"]
-
     list_var = creer_list_var(m,n)
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
     V_sur_le_monde : ClauseBase = []
@@ -91,38 +96,38 @@ def main():
     list_var = creer_list_var(m,n)
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
 
-    Knowledge.ajout_voir_knowledge(status)
-    print(Knowledge)
+    #TODO attention mal coder on peut quitter la map
 
-    status = hr.move()
-    pprint(status)
-    Knowledge.ajout_voir_knowledge(status)
-    print(Knowledge)
+    #test mouvement random
+    while (Knowledge.je_sais_pas_tt()):
+        
+        x,y = status["position"]
+        off = orientation_hitman(status)
+        x,y = x+off[0],y+off[1]
+        random_move_list = []
+        #on ajoute les fonction :
+        if x >= 0 and x<=m and y >= 0 and y<=n:
+            random_move_list.append(hr.move)
+        random_move_list.append(hr.turn_anti_clockwise)
+        random_move_list.append(hr.turn_clockwise)
 
-    status = hr.turn_clockwise()
-    pprint(status)
-    Knowledge.ajout_voir_knowledge(status)
-    print(Knowledge)
-
-    trois_six(hr,Knowledge)
-    status = hr.move()
-    Knowledge.ajout_voir_knowledge(status)
-
-    trois_six(hr,Knowledge)
-    status = hr.move()
-    Knowledge.ajout_voir_knowledge(status)
-
-    trois_six(hr,Knowledge)
-    status = hr.move()
-    Knowledge.ajout_voir_knowledge(status)
-
-    trois_six(hr,Knowledge)
-    status = hr.move()
-    Knowledge.ajout_voir_knowledge(status)
+        #on choisit une fonction random
+        random_move = random.choice(random_move_list)
+        #on execute la fonction
+        status = random_move()
+        #on ajoute le knowledge
+        Knowledge.ajout_voir_knowledge(status)
+        #on efface la console et on affiche le knowledge
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(Knowledge)
+        print(status["position"],status["orientation"], status["penalties"])
+    
+    print(hr.send_content(Knowledge.get_all_knowledge()))
 
 
 
     pass
+
 
 if __name__ == "__main__":
     main()
