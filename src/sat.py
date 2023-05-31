@@ -78,3 +78,24 @@ def exec_gophersat(
 
     return True, [int(x) for x in model]
 
+
+def test_deduction(filename: str, var_tester: int):
+    # on ajoute la negation de la variable a tester dans un ficher temporaire
+    try:
+        with open(filename, 'r') as source:
+            with open("temp.cnf", 'w') as destination:
+                destination.write(source.read())
+        print("Le fichier a été dupliqué avec succès.")
+    except FileNotFoundError:
+        print("Le fichier source n'existe pas.")
+    with open("temp.cnf", "a") as cnf:
+        cnf.write(f"-{var_tester} 0")
+    # on lance gophersat
+    res = exec_gophersat("temp.cnf")
+    if res[0] == False:
+        print(f"on deduit {var_tester}")
+        return var_tester
+    else:
+        return None
+
+    

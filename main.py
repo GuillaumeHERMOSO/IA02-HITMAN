@@ -42,7 +42,8 @@ def main():
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
     V_sur_le_monde : ClauseBase = []
     V_sur_le_monde += exactly_k(nbr_P,gen_var_lettre(m,n,dict_var_to_num,"P"))
-    print(len(V_sur_le_monde))
+    
+    #print(len(V_sur_le_monde))
     
     # TODO c'est long
     #dimac = clauses_to_dimacs(V_sur_le_monde,len(list_var))
@@ -51,11 +52,19 @@ def main():
     # TODO Mieux mais pas encore rapide
     # write_dimacs_file2(clauses = V_sur_le_monde, nb_vars = len(list_var), filename = "./test2.cnf")
     
-    
-    res = exec_gophersat( "test2.cnf")
+    """   
+    res = exec_gophersat("test2.cnf")
     print(res)
-    """
 
+    #TODO ne marche pas 
+    #test_deduction("test2.cnf", 1)
+
+    list_var = creer_list_var(m,n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
+
+    pprint(Knowledge.get_all_knowledge())
+    r = knowledge_to_clause_personne(Knowledge.get_all_knowledge(),dict_var_to_num)
+    print(r)
     pass
 
 if __name__ == "__main__":

@@ -1,6 +1,11 @@
 from enum import Enum
-from typing import Tuple, Dict
-
+from typing import Tuple, Dict, List
+Grid = List[List[int]]
+PropositionnalVariable = int
+Literal = int
+Clause = List[Literal]
+ClauseBase = List[Clause]
+Model = List[Literal]
 class HC(Enum): 
     EMPTY = 1
     WALL = 2
@@ -74,9 +79,7 @@ class HitmanKnowledge:
 
     def get_all_knowledge(self) -> Dict[Tuple[int, int], HC]:
         return self.knowledge
-
-
-    
+ 
 
                 
 
@@ -110,5 +113,14 @@ class HitmanKnowledge:
         pass
 
     
+
+def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
+    r :ClauseBase =[]
+    for i,v in Dico_know.items():
+        #print(v)
+        if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W]:
+            #print(f"{i[0]}{i[1]}_P")
+            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"])
+    return r
 
 
