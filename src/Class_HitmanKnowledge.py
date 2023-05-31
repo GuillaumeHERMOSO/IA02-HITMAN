@@ -119,6 +119,15 @@ class HitmanKnowledge:
             self.add_knowledge(pos,valeur)
         pass
 
+    def je_sais_pas_tt(self):
+        #boolean pour savoir si notre dico est complet
+        for i in range(self.n):
+            for j in range(self.m):
+                if not self.has_knowledge(i,j):
+                    return True
+        return False
+        
+
     
 
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
