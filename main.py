@@ -67,7 +67,7 @@ def main():
     #dimac = clauses_to_dimacs(V_sur_le_monde,len(list_var))
     #write_dimacs_file(dimac, "./test.cnf")
     
-    # TODO Mieux mais pas encore rapide
+    # TODO Mieux mais pas encore rapide (Toi 5MIN --> Moi 1min )
     # write_dimacs_file2(clauses = V_sur_le_monde, nb_vars = len(list_var), filename = "./test2.cnf")
     
      
@@ -142,9 +142,9 @@ def main2() :
     write_dimacs_file2(clauses=V_sur_le_monde, nb_vars=len(list_var), filename="./test2.cnf")
     res = exec_gophersat("test2.cnf")
     print(res)
-    # test_deduction("C:\\Users\\jawed\\Documents\\GitHub\\IA02-HITMAN\\test2.cnf", 1)
+    test_deduction("C:\\Users\\jawed\\Documents\\GitHub\\IA02-HITMAN\\test2.cnf", 1)
 
 
 if __name__ == "__main__":
-    #main2()
-    main()
+    main2()
+    #main()

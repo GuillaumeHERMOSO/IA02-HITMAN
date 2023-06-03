@@ -80,22 +80,33 @@ def exec_gophersat(
 
 
 def test_deduction(filename: str, var_tester: int):
-    # on ajoute la negation de la variable a tester dans un ficher temporaire
+    # on ajoute la negation de la variable a tester dans le ficher
     try:
         with open(filename, 'r') as source:
-            with open("temp.cnf", 'w') as destination:
-                destination.write(source.read())
+            contenu = source.read()         #lecture du fichier
+            temp = contenu
+            lignes_contenu = contenu.split("\n")        # Séparation en ligne par ligne
+            ligne_1 = lignes_contenu[0].split(" ")      # Séparation de la première ligne
+            ligne_1[-1] = str(int(ligne_1[-1])+1)       # Incrémentation du nb de clauses
+            lignes_contenu[0] = ' '.join(ligne_1)        # Sauvegarde de la ligne modifié
+            lignes_contenu.append(f"-{var_tester} 0")      # Ajout de la nouvelle clause négative
+            contenu = "\n".join(lignes_contenu)         # Retransformation du fichier
+
+        with open(filename, "w", encoding="utf-8") as destination:
+            destination.write(contenu)                      # Réecriture du fichier
+
         print("Le fichier a été dupliqué avec succès.")
     except FileNotFoundError:
-        print("Le fichier source n'existe pas.")
-    with open("temp.cnf", "a") as cnf:
-        cnf.write(f"-{var_tester} 0")
-    # on lance gophersat
-    res = exec_gophersat("temp.cnf")
+        print("Le fichier source n'existe pas. Réessayez")
+        return
+
+    # Si c'est bon on lance gophersat
+    res = exec_gophersat("test2.cnf")
     if res[0] == False:
         print(f"on deduit {var_tester}")
-        return var_tester
-    else:
-        return None
+        lignes_contenu[-1] = f"{var_tester} 0"
+        temp = "\n".join(lignes_contenu)         # Retransformation du fichier
+    with open(filename, "w", encoding="utf-8") as destination:
+        destination.write(temp)                      # Réecriture du fichier
 
     
