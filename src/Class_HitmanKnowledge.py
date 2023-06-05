@@ -1,4 +1,5 @@
 from enum import Enum
+from time import sleep
 from typing import Tuple, Dict, List
 Grid = List[List[int]]
 PropositionnalVariable = int
@@ -6,24 +7,8 @@ Literal = int
 Clause = List[Literal]
 ClauseBase = List[Clause]
 Model = List[Literal]
-class HC(Enum): 
-    EMPTY = 1
-    WALL = 2
-    GUARD_N = 3
-    GUARD_E = 4
-    GUARD_S = 5
-    GUARD_W = 6
-    CIVIL_N = 7
-    CIVIL_E = 8
-    CIVIL_S = 9
-    CIVIL_W = 10
-    TARGET = 11
-    SUIT = 12
-    PIANO_WIRE = 13
-    N = 14
-    E = 15
-    S = 16
-    W = 17
+
+from src.arbitre.hitman import HC
 
 class HitmanKnowledge:
     def __init__(self, m: int, n: int):
@@ -36,13 +21,13 @@ class HitmanKnowledge:
         return (i, j) in self.knowledge
     
     def orientation_garde(self,garde):
-        if garde == HC.GUARD_N:
+        if garde.name == HC.GUARD_N.name :
             offset = 0, 1
-        elif garde == HC.GUARD_E:
+        elif garde.name  == HC.GUARD_E.name :
             offset = 1, 0
-        elif garde == HC.GUARD_S:
+        elif garde.name  == HC.GUARD_S.name :
             offset = 0, -1
-        elif garde == HC.GUARD_W:
+        elif garde.name  == HC.GUARD_W.name :
             offset = -1, 0
         return offset
     
@@ -53,7 +38,7 @@ class HitmanKnowledge:
         self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
         for position in self.knowledge:
             vision = []
-            if self.knowledge[position] in [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W]:
+            if self.knowledge[position] in  [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W]:
                 offset_x, offset_y = self.orientation_garde(self.knowledge[position])
                 x,y = position
                 for _ in range(0, 2):
@@ -64,19 +49,22 @@ class HitmanKnowledge:
                     vision.append(pos)
                     if (self.has_knowledge(x,y) and self.knowledge[pos] != HC.EMPTY):
                         break
-                for pos in vision:
-                    self.matrice_vision[pos] += 1
+            for pos in vision:
+                self.matrice_vision[pos] += 1
         pass
 
     def add_knowledge(self, position: Tuple[int, int], content: HC):
         if (not self.has_knowledge(position[0], position[1])):
             self.knowledge[position] = content
             self.maj_vision_garde()
-        else:
-            print("Erreur : la position est déjà connue")
+            pass
+        #print("Erreur : la position est déjà connue")
+        pass
 
     def get_knowledge(self, position: Tuple[int, int]) -> HC:
-        return self.knowledge.get(position, HC.EMPTY)
+        if self.has_knowledge(position[0], position[1]):
+            return self.knowledge[position]
+        return None
 
     def get_all_knowledge(self) -> Dict[Tuple[int, int], HC]:
         return self.knowledge

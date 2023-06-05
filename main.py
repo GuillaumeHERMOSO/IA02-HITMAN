@@ -5,51 +5,8 @@ from src.arbitre.hitman import *
 from src.clause_dynamique import *
 from src.clause_verite_sur_le_monde import *
 from src.Class_HitmanKnowledge import *
-
-class HC(Enum): 
-    EMPTY = 1
-    WALL = 2
-    GUARD_N = 3
-    GUARD_E = 4
-    GUARD_S = 5
-    GUARD_W = 6
-    CIVIL_N = 7
-    CIVIL_E = 8
-    CIVIL_S = 9
-    CIVIL_W = 10
-    TARGET = 11
-    SUIT = 12
-    PIANO_WIRE = 13
-    N = 14
-    E = 15
-    S = 16
-    W = 17
-
-
-def trois_six(hr : HitmanReferee, know : HitmanKnowledge):
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    print(know)
-    print(status["position"])
-    pass
-
-def orientation_hitman(status :Dict):
-    orientation :HC  = status["orientation"]
-    if orientation.name == HC.N.name:
-        offset = 0, 1
-    elif orientation.name is HC.E.name:
-        offset = 1, 0
-    elif orientation.name is HC.S.name:
-        offset = 0, -1
-    elif orientation.name is HC.W.name:
-        offset = -1, 0
-    return offset
+from src.arbitre.hitman import HC
+from src.mouvement_phase1 import *
 
 
 def main():
@@ -96,6 +53,12 @@ def main():
     list_var = creer_list_var(m,n)
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
 
+    Knowledge.ajout_voir_knowledge(status)
+    print(Knowledge)
+    print(case_inconnu_plus_proche_hitman(0,2,n,m,Knowledge))
+    sleep(5)
+
+
     #TODO attention mal coder on peut quitter la map
 
     #test mouvement random
@@ -106,8 +69,11 @@ def main():
         x,y = x+off[0],y+off[1]
         random_move_list = []
         #on ajoute les fonction :
-        if x >= 0 and x<=m and y >= 0 and y<=n:
-            random_move_list.append(hr.move)
+        if x >= 0 and x<=m and y >= 0 and y<=n :
+            if Knowledge.has_knowledge(x,y) == False:
+                random_move_list.append(hr.move)
+            elif Knowledge.knowledge[(x,y)] not in [HC.GUARD_E,HC.GUARD_N,HC.GUARD_S,HC.GUARD_W]:
+                random_move_list.append(hr.move)
         random_move_list.append(hr.turn_anti_clockwise)
         random_move_list.append(hr.turn_clockwise)
 
@@ -117,12 +83,15 @@ def main():
         status = random_move()
         #on ajoute le knowledge
         Knowledge.ajout_voir_knowledge(status)
+        #print(Knowledge.get_all_knowledge())
         #on efface la console et on affiche le knowledge
         os.system('cls' if os.name == 'nt' else 'clear')
-        print(Knowledge)
+        print(Knowledge, "\n\n")
         print(status["position"],status["orientation"], status["penalties"])
     
     print(hr.send_content(Knowledge.get_all_knowledge()))
+    Knowledge.affichage_vison()
+    print(f"m = {m} n = {n}")
 
 
 
@@ -142,9 +111,26 @@ def main2() :
     write_dimacs_file2(clauses=V_sur_le_monde, nb_vars=len(list_var), filename="./test2.cnf")
     res = exec_gophersat("test2.cnf")
     print(res)
-    test_deduction("C:\\Users\\jawed\\Documents\\GitHub\\IA02-HITMAN\\test2.cnf", 1)
 
+    test_deduction("test2.cnf", 1)
+
+def main3():
+    hr = HitmanReferee()
+    status = hr.start_phase1()
+    n = status["n"]
+    m = status["m"]
+    Knowledge = HitmanKnowledge(m,n)
+    Knowledge.ajout_voir_knowledge(status)
+    print(Knowledge)
+    for i in range(100):
+        status = strategie1(hr,Knowledge)
+        Knowledge.ajout_voir_knowledge(status)
+        #print(Knowledge)
+        print(status["position"],status["orientation"], status["penalties"])
+        sleep(1)
+
+    pass
 
 if __name__ == "__main__":
-    main2()
-    #main()
+    main3()
+    #main2()
