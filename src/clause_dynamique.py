@@ -56,7 +56,7 @@ def voir(dico,dict_var_to_num) : # Voir pour le sat
     variables = []
     for pos,valeur in dico["vision"] :
         x,y = pos
-        variables.append(dict_var_to_num[f"{x}{y}_{valeur}"])  # Transformation en valeurs utilisable dans SAT
+        variables.append(dict_var_to_num[f"{x}{y}_P"])  # Transformation en valeurs utilisable dans SAT
     return variables
 
 
