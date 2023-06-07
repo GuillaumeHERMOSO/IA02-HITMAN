@@ -7,6 +7,7 @@ from src.clause_verite_sur_le_monde import *
 from src.Class_HitmanKnowledge import *
 from src.arbitre.hitman import HC
 from src.mouvement_phase1 import *
+from src.test_mouvement import *
 
 
 def main():
@@ -50,6 +51,8 @@ def main():
     n = status["n"]
     m = status["m"]
     Knowledge = HitmanKnowledge(m,n)
+    Knowledge.ajout_voir_knowledge(status)
+    """    
     list_var = creer_list_var(m,n)
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
 
@@ -57,6 +60,7 @@ def main():
     print(Knowledge)
     print(case_inconnu_plus_proche_hitman(0,2,n,m,Knowledge))
     sleep(5)
+    """
 
 
     #TODO attention mal coder on peut quitter la map
@@ -72,7 +76,7 @@ def main():
         if x >= 0 and x<=m and y >= 0 and y<=n :
             if Knowledge.has_knowledge(x,y) == False:
                 random_move_list.append(hr.move)
-            elif Knowledge.knowledge[(x,y)] not in [HC.GUARD_E,HC.GUARD_N,HC.GUARD_S,HC.GUARD_W]:
+            elif Knowledge.knowledge[(x,y)] not in [HC.GUARD_E,HC.GUARD_N,HC.GUARD_S,HC.GUARD_W] or status["is_in_guard_range"]:
                 random_move_list.append(hr.move)
         random_move_list.append(hr.turn_anti_clockwise)
         random_move_list.append(hr.turn_clockwise)
@@ -120,15 +124,7 @@ def main3():
     n = status["n"]
     m = status["m"]
     Knowledge = HitmanKnowledge(m,n)
-    Knowledge.ajout_voir_knowledge(status)
-    print(Knowledge)
-    for i in range(100):
-        status = strategie1(hr,Knowledge)
-        Knowledge.ajout_voir_knowledge(status)
-        #print(Knowledge)
-        print(status["position"],status["orientation"], status["penalties"])
-        sleep(1)
-
+    coller_bordure(n , m , hr , Knowledge )
     pass
 
 if __name__ == "__main__":

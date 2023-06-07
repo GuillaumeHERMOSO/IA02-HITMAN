@@ -8,7 +8,7 @@ Clause = List[Literal]
 ClauseBase = List[Clause]
 Model = List[Literal]
 
-from src.arbitre.hitman import HC
+from src.arbitre.hitman import *
 
 class HitmanKnowledge:
     def __init__(self, m: int, n: int):
