@@ -7,7 +7,7 @@ from src.clause_verite_sur_le_monde import *
 from src.Class_HitmanKnowledge import *
 from src.arbitre.hitman import HC
 from src.mouvement_phase1 import *
-from src.test_mouvement import *
+from src.a_etoile import *
 
 
 def main():
@@ -118,15 +118,90 @@ def main2() :
 
     test_deduction("test2.cnf", 1)
 
-def main3():
-    hr = HitmanReferee()
+def main4():
+    # MARCHE SI LA CARTE EST CONNUE et complete
+    complete_map_example = {
+    (0, 5): HC.EMPTY,
+    (1, 5): HC.EMPTY,
+    (2, 5): HC.EMPTY,
+    (3, 5): HC.SUIT,
+    (4, 5): HC.GUARD_S,
+    (5, 5): HC.WALL,
+    (6, 5): HC.WALL,
+    (0, 4): HC.EMPTY,
+    (1, 4): HC.WALL,
+    (2, 4): HC.EMPTY,
+    (3, 4): HC.EMPTY,
+    (4, 4): HC.EMPTY,
+    (5, 4): HC.EMPTY,
+    (6, 4): HC.EMPTY,
+    (0, 3): HC.TARGET,
+    (1, 3): HC.WALL,
+    (2, 3): HC.EMPTY,
+    (3, 3): HC.EMPTY,
+    (4, 3): HC.EMPTY,
+    (5, 3): HC.CIVIL_N,
+    (6, 3): HC.EMPTY,
+    (0, 2): HC.WALL,
+    (1, 2): HC.WALL,
+    (2, 2): HC.EMPTY,
+    (3, 2): HC.GUARD_E,
+    (4, 2): HC.EMPTY,
+    (5, 2): HC.CIVIL_E,
+    (6, 2): HC.CIVIL_W,
+    (0, 1): HC.EMPTY,
+    (1, 1): HC.EMPTY,
+    (2, 1): HC.EMPTY,
+    (3, 1): HC.EMPTY,
+    (4, 1): HC.EMPTY,
+    (5, 1): HC.EMPTY,
+    (6, 1): HC.EMPTY,
+    (0, 0): HC.EMPTY,
+    (1, 0): HC.EMPTY,
+    (2, 0): HC.WALL,
+    (3, 0): HC.WALL,
+    (4, 0): HC.EMPTY,
+    (5, 0): HC.PIANO_WIRE,
+    (6, 0): HC.EMPTY,
+    }
+    m = 6
+    n = 7
+    con = HitmanKnowledge(m=m, n=n)
+    con.knowledge = complete_map_example
+    print(con)
+
+    walls = con.get_liste_mur()
+    case_vu = con.get_liste_casevu()
+
+
+    print("Début de l'algo")
+    s0 = (0,0)
+    goal = (6,4)
+
+    s, d = astar_with_parent(s0, goal, succ, con.get_all_knowledge(),m,n, walls, case_vu)
+    print("Fin de l'algo")
+    print("Début de la reconstruction du chemin")
+    chemin = []
+    while s != s0:
+        chemin.append(s)
+        s = d[s]
+    chemin.append(s0)
+    chemin.reverse()
+    print("Fin de la reconstruction du chemin")
+    print(chemin)
+    #def chemin_to_action(chemin :List[Tuple[int,int]], orientation_depart : HC, know :HitmanKnowledge, hr:HitmanReferee) -> List[Callable[[],None]]:
+
+    hr =HitmanReferee()
     status = hr.start_phase1()
-    n = status["n"]
-    m = status["m"]
-    Knowledge = HitmanKnowledge(m,n)
-    coller_bordure(n , m , hr , Knowledge )
+    o = status["orientation"]
+    actions = chemin_to_action(chemin, o, con, hr)
+    print(actions)
+    affichage_liste_action(actions)
+
+def main5():
     pass
 
+
 if __name__ == "__main__":
-    main3()
+    main4()
     #main2()

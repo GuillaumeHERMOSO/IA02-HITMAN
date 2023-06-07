@@ -113,7 +113,23 @@ class HitmanKnowledge:
                 if not self.has_knowledge(i,j):
                     return True
         return False
-        
+
+    def get_liste_mur(self)->List[Tuple[int,int]]:
+        """Retourne la liste des murs"""
+        r = []
+        for pos,val in self.knowledge:
+            if val == HC.WALL:
+                r.append(pos)
+        return r
+    
+    def get_liste_casevu(self)->List[Tuple[int,int]]:
+        """Retourne la liste des cases vues"""
+        self.maj_vision_garde()
+        r = []
+        for pos,val in self.matrice_vision:
+            if val != 0:
+                r.append(pos)
+        return r
 
     
 

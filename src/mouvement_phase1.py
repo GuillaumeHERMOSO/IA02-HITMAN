@@ -1,5 +1,6 @@
 from src.arbitre.hitman import *
 from src.Class_HitmanKnowledge import *
+from src.a_etoile import *
 
 def trois_six(hr : HitmanReferee, know : HitmanKnowledge):
     status = hr.turn_clockwise()
@@ -44,177 +45,93 @@ def nbr_inconu_autour_hitman(x :int, y :int, know :HitmanKnowledge):
 
     return nbr
 
-def case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know :HitmanKnowledge):
-    dist = 99999999
-    #(i,j) x sur m et y sur n
+def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know :HitmanKnowledge) -> List[Tuple[int,int]]:
+    """ Retourne la liste des cases inconnu les plus proche de hitman trier par le calcul de la distance de manhattan et le nombre de mur entre hitman et la case"""
+    case = []
+    walls = know.get_walls()
+
     for i in range(n):
         for j in range(m):
             if (i,j) not in know.knowledge:
-                if abs(i-x) + abs(j-y) < dist:
-                    dist = abs(i-x) + abs(j-y)
-                    case = (i,j)
+                case.append((i,j))
+    case.sort(key=lambda x: (abs(x[0]-x),abs(x[1]-y),nbr_wall_entre((x[0],x[1]),(x,y),walls)))
     return case
-def case_ok (x:int ,y: int ,n: int, m:int, know :HitmanKnowledge):
-    if x >= 0 and x<=m and y >= 0 and y<=n :
-        if (x,y) not in know.knowledge:
-            return True
-        elif know.knowledge[(x,y)] not in [HC.GUARD_E,HC.GUARD_N,HC.GUARD_S,HC.GUARD_W, HC.WALL]:
-            return True
-    return False
 
-def case_possible (x:int ,y: int ,n: int, m:int, know :HitmanKnowledge):
-    if x >= 0 and x<=m and y >= 0 and y<=n :
-        if (x,y) not in know.knowledge:
-            return True
-        elif know.knowledge[(x,y)] != HC.WALL:
-            return True
-    return False
-
-def liste_case_ok(x:int ,y: int ,n: int, m:int, know :HitmanKnowledge):
-    liste = []
-    if case_ok(x+1,y,n,m,know):
-        liste.append((x+1,y))
-    if case_ok(x-1,y,n,m,know):
-        liste.append((x-1,y))
-    if case_ok(x,y+1,n,m,know):
-        liste.append((x,y+1))
-    if case_ok(x,y-1,n,m,know):
-        liste.append((x,y-1))
-    return liste
-
-
-def successeur_case(x:int , y:int ,val:HC, n:int, m:int, know :HitmanKnowledge):
-    if val in [HC.GUARD_E,HC.GUARD_N,HC.GUARD_S,HC.GUARD_W, HC.WALL] :
-        return None
-    else :
-        return liste_case_ok(x,y,n,m,know)
-    
-
-
-def strategie1(hr :HitmanReferee, Knowledge : HitmanKnowledge) :
-    """ Strategie 1 : on est sur une case on tourne pour voir tt les cases autour de nous si on en a pas la connaissance 
-    puis on avance d'une case en priorisant les case qui sont le moins vu par les gardes et sinon on prend lautre Nord ouest sud est
+def get_action(pos1 :Tuple[int,int], pos2 :Tuple[int,int], orientation : HC, know :HitmanKnowledge, hr:HitmanReferee) -> Tuple[List[Callable[[],None]],HC]:
+    """"Renvoie une liste d'action et l'orientation pour aller de pos1 a pos2
+        action possible : 
+        move
+        turn_clockwise
+        turn_anti_clockwise
     """
-    status = hr.start_phase1()
-    n = status["n"]
-    m = status["m"]
-    x,y = status["position"]
-    orientation = status["orientation"]
     
-   
-    #strategie : on va vers le nord si on a pas la connaissance de la case nord +3
-    orientation = status["orientation"]
+    actions = []
     if orientation == HC.N:
-        dest = (x,y+3)
-        verif = (x,y+1)
+        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
+            actions.append(hr.turn_anti_clockwise)
+            actions.append(hr.move)
     elif orientation == HC.E:
-        dest = (x+3,y)
-        verif = (x+1,y)
+        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+            actions.append(hr.turn_anti_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
     elif orientation == HC.S:
-        dest = (x,y-3)
-        verif = (x,y-1)
+        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
+            actions.append(hr.turn_anti_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
     elif orientation == HC.W:
-        dest = (x-3,y)
-        verif = (x-1,y)
+        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
+            actions.append(hr.turn_anti_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
+            actions.append(hr.move)
+
+    return actions, orientation
     
-    if Knowledge.has_knowledge(dest[0],dest[1]) == False:
-        #on va vers notre orientation car on a pas la connaissance de la case +3
-        if case_ok(dest[0], dest[1], n, m, Knowledge):
-            print(f"on va vers la case {dest} car on a pas la connaissance de la case +3")
-            if case_possible(verif[0], verif[1], n, m, Knowledge):
-                print(f"on avance pour avoir la connaissance de la case +3")
-                status = hr.move()
-                Knowledge.ajout_voir_knowledge(status)
-                return status
-            else:
-                print(f"on tourne car on peut pas allez en +1")
-                status = hr.turn_clockwise()
-                Knowledge.ajout_voir_knowledge(status)
-                return status
-        else:
-            print(f"on tourne car on a  la connaissance de la case +3")
-            status = hr.turn_clockwise()
-            Knowledge.ajout_voir_knowledge(status)
-            return status
-    else:
-        print("on tourne car on a pas la connaissance de la case +3")
-        status = hr.turn_clockwise()
-        Knowledge.ajout_voir_knowledge(status)
-        if orientation == HC.N:
-            dest = (x,y+3)
-        elif orientation == HC.E:
-            dest = (x+3,y)
-        elif orientation == HC.S:
-            dest = (x,y-3)
-        elif orientation == HC.W:
-            dest = (x-3,y)
-        
-        if case_possible(dest[0], dest[1], n, m, Knowledge):
-            print(f"on va vers la case {dest} car on a pas la connaissance de la case +3")
-            status = hr.move()
-            Knowledge.ajout_voir_knowledge(status)
-            return status
-        return status
+def chemin_to_action(chemin :List[Tuple[int,int]], orientation_depart : HC, know :HitmanKnowledge, hr:HitmanReferee) -> List[Callable[[],None]]:
+    """ Renvoie une liste d'action a partir d'un chemin"""
+    actions = []
+    o = orientation_depart
+    for i in range(len(chemin)-1):
+        a, o=get_action(chemin[i],chemin[i+1],o,know,hr)
+        actions += a
+    return actions
 
-
-
-
-
-"""
-    if x<n and dico_connaissance[(x + 1, y)] == "Vide" : # Si le nord est inconnu
-        if orientation == (1, 0):  # Si à l'est
-            dico = HitmanReferee.turn_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-        else:  # Si Ouest ou Sud(opposé de nord )
-            dico = HitmanReferee.turn_anti_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-
-    if x>0 and dico_connaissance[(x - 1, y)] == "Vide": # Si le sud est inconnu
-        if orientation == (-1, 0):  # Si à l'ouest
-            dico = HitmanReferee.turn_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-        else:  # Si Est ou nord(opposé de sud )
-            dico = HitmanReferee.turn_anti_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-
-
-    if y<m and dico_connaissance[(x, y+1)] == "Vide": # Si l'est est inconnu
-        if orientation == (0, 1):  # Si au Nord
-            dico = HitmanReferee.turn_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-
-        else:  # Si Sud ou Ouest(opposé de l'est )
-            dico = HitmanReferee.turn_anti_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-
-
-    if y>0 and dico_connaissance[(x, y - 1)] == "Vide": # Si l'ouest est inconnu
-        if orientation == (0, -1):  # Si au Sud
-            dico = HitmanReferee.turn_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-
-        else:  # Si Nord ou Est (opposé de l'ouest )
-            dico = HitmanReferee.turn_anti_clockwise()
-            dico_connaissance = maj_dico_connaissance(dico_connaissance,dico)
-            maj_fichier_sat_vision(dico)
-
-    # Normalement d'ici on a toutes les données des 4 orientations
-
-    if orientation == (0,1) and x<n and matrice_vision[x+1][y] == 0 and dico_connaissance[(x+1,y)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
-        return HitmanReferee.move()
-    if orientation == (0,-1) and x>0 and matrice_vision[x-1][y] == 0 and dico_connaissance[(x-1,y)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
-        return HitmanReferee.move()
-    if orientation == (1,0) and y<m and matrice_vision[x][y+1] == 0 and dico_connaissance[(x,y+1)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
-        return HitmanReferee.move()
-    if orientation == (-1,0) and y>0 and matrice_vision[x][y-1] == 0 and dico_connaissance[(x,y-1)] not in [HC.WALL,HC.GUARD_W,HC.GUARD_N,HC.GUARD_E,HC.GUARD_S] :
-        return HitmanReferee.move()
-
-    return dico
-    """
+def affichage_liste_action(actions :List[Callable[[],None]]) -> None:
+    """ Affiche les actions"""
+    for a in actions:
+        print(a.__name__)
+    pass
