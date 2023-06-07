@@ -194,9 +194,14 @@ def main4():
     hr =HitmanReferee()
     status = hr.start_phase1()
     o = status["orientation"]
+
     actions = chemin_to_action(chemin, o, con, hr)
-    print(actions)
-    affichage_liste_action(actions)
+    #print(actions)
+    #affichage_liste_action(actions)
+    for a in actions:
+        status = a()
+        print(status["position"],status["orientation"], status["penalties"])
+    print(o)
 
 def main5():
     pass

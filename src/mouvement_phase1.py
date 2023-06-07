@@ -64,61 +64,78 @@ def get_action(pos1 :Tuple[int,int], pos2 :Tuple[int,int], orientation : HC, kno
         turn_clockwise
         turn_anti_clockwise
     """
-    
     actions = []
+    base = orientation
     if orientation == HC.N:
-        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+        if pos1[0] == pos2[0]   and pos1[1]+1 == pos2[1] :
             actions.append(hr.move)
-        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
+        elif pos1[0] == pos2[0]  and pos1[1]-1 == pos2[1] :
             actions.append(hr.turn_clockwise)
             actions.append(hr.turn_clockwise)
+            orientation = HC.S
             actions.append(hr.move)
-        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
+        elif pos1[0]+1 == pos2[0]  and pos1[1] == pos2[1] :
             actions.append(hr.turn_clockwise)
+            orientation = HC.E
             actions.append(hr.move)
-        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
+        elif pos1[0]-1 == pos2[0]  and pos1[1] == pos2[1] :
             actions.append(hr.turn_anti_clockwise)
+            orientation = HC.W
             actions.append(hr.move)
+    
     elif orientation == HC.E:
-        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+        if pos1[0] == pos2[0]   and pos1[1]+1 == pos2[1] :
             actions.append(hr.turn_anti_clockwise)
+            orientation = HC.N
             actions.append(hr.move)
-        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
+        elif pos1[0] == pos2[0]  and pos1[1]-1 == pos2[1] :
             actions.append(hr.turn_clockwise)
+            orientation = HC.S
             actions.append(hr.move)
-        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
+        elif pos1[0]+1 == pos2[0]  and pos1[1] == pos2[1] :
             actions.append(hr.move)
-        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
-            actions.append(hr.turn_clockwise)
-            actions.append(hr.turn_clockwise)
-            actions.append(hr.move)
-    elif orientation == HC.S:
-        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
+        elif pos1[0]-1 == pos2[0]  and pos1[1] == pos2[1] :
             actions.append(hr.turn_clockwise)
             actions.append(hr.turn_clockwise)
-            actions.append(hr.move)
-        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
-            actions.append(hr.move)
-        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
-            actions.append(hr.turn_anti_clockwise)
-            actions.append(hr.move)
-        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
-            actions.append(hr.turn_clockwise)
-            actions.append(hr.move)
-    elif orientation == HC.W:
-        if pos1[0] == pos2[0]   and pos1[1] == pos2[1] +1:
-            actions.append(hr.turn_clockwise)
-            actions.append(hr.move)
-        elif pos1[0] == pos2[0]  and pos1[1] == pos2[1] -1:
-            actions.append(hr.turn_anti_clockwise)
-            actions.append(hr.move)
-        elif pos1[0] == pos2[0] +1  and pos1[1] == pos2[1]:
-            actions.append(hr.turn_clockwise)
-            actions.append(hr.turn_clockwise)
-            actions.append(hr.move)
-        elif pos1[0] == pos2[0] -1  and pos1[1] == pos2[1]:
+            orientation = HC.W
             actions.append(hr.move)
 
+    elif orientation == HC.S:
+        if pos1[0] == pos2[0]   and pos1[1]+1 == pos2[1] :
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.turn_clockwise)
+            orientation = HC.N
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0]  and pos1[1]-1 == pos2[1] :
+            actions.append(hr.move)
+        elif pos1[0]+1 == pos2[0]  and pos1[1] == pos2[1] :
+            actions.append(hr.turn_anti_clockwise)
+            orientation = HC.E
+            actions.append(hr.move)
+        elif pos1[0]-1 == pos2[0]  and pos1[1] == pos2[1] :
+            actions.append(hr.turn_clockwise)
+            orientation = HC.W
+            actions.append(hr.move)
+
+    elif orientation == HC.W:
+        if pos1[0] == pos2[0]   and pos1[1]+1 == pos2[1] :
+            actions.append(hr.turn_clockwise)
+            orientation = HC.N
+            actions.append(hr.move)
+        elif pos1[0] == pos2[0]  and pos1[1]-1 == pos2[1] :
+            actions.append(hr.turn_anti_clockwise)
+            orientation = HC.S
+            actions.append(hr.move)
+        elif pos1[0]+1 == pos2[0]  and pos1[1] == pos2[1] :
+            actions.append(hr.turn_clockwise)
+            actions.append(hr.turn_clockwise)
+            orientation = HC.E
+            actions.append(hr.move)
+        elif pos1[0]-1 == pos2[0]  and pos1[1] == pos2[1] :
+            actions.append(hr.move)
+
+
+    #print(f"on est en {pos1} et on va en {pos2} avec {base} et on fait {[x.__name__ for x in actions]}")
     return actions, orientation
     
 def chemin_to_action(chemin :List[Tuple[int,int]], orientation_depart : HC, know :HitmanKnowledge, hr:HitmanReferee) -> List[Callable[[],None]]:
