@@ -48,13 +48,16 @@ def nbr_inconu_autour_hitman(x :int, y :int, know :HitmanKnowledge):
 def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know :HitmanKnowledge) -> List[Tuple[int,int]]:
     """ Retourne la liste des cases inconnu les plus proche de hitman trier par le calcul de la distance de manhattan et le nombre de mur entre hitman et la case"""
     case = []
-    walls = know.get_walls()
+    walls = know.get_liste_mur()
 
     for i in range(n):
         for j in range(m):
             if (i,j) not in know.knowledge:
                 case.append((i,j))
-    case.sort(key=lambda x: (abs(x[0]-x),abs(x[1]-y),nbr_wall_entre((x[0],x[1]),(x,y),walls)))
+    case.sort(key=lambda k: (distanceManhattan(k,(x,y))))
+    #print(case)
+    #TODO trier     case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5* nbr_wall_entre((x[0],x[1]),(x,y),walls)))
+
     return case
 
 def get_action(pos1 :Tuple[int,int], pos2 :Tuple[int,int], orientation : HC, know :HitmanKnowledge, hr:HitmanReferee) -> Tuple[List[Callable[[],None]],HC]:
@@ -152,3 +155,36 @@ def affichage_liste_action(actions :List[Callable[[],None]]) -> None:
     for a in actions:
         print(a.__name__)
     pass
+
+def tourner(orientation_actuel: HC, orientation_voulu: HC, hr:HitmanReferee) -> List[Callable[[],None]]:
+    """ Renvoie une liste d'action pour tourner de orientation_actuel a orientation_voulu"""
+    if orientation_actuel == orientation_voulu:
+        return []
+    if orientation_actuel == HC.N:
+        if orientation_voulu == HC.E:
+            return [hr.turn_clockwise]
+        elif orientation_voulu == HC.S:
+            return [hr.turn_clockwise,hr.turn_clockwise]
+        elif orientation_voulu == HC.W:
+            return [hr.turn_anti_clockwise]
+    elif orientation_actuel == HC.E:
+        if orientation_voulu == HC.S:
+            return [hr.turn_clockwise]
+        elif orientation_voulu == HC.W:
+            return [hr.turn_clockwise,hr.turn_clockwise]
+        elif orientation_voulu == HC.N:
+            return [hr.turn_anti_clockwise]
+    elif orientation_actuel == HC.S:
+        if orientation_voulu == HC.W:
+            return [hr.turn_clockwise]
+        elif orientation_voulu == HC.N:
+            return [hr.turn_clockwise,hr.turn_clockwise]
+        elif orientation_voulu == HC.E:
+            return [hr.turn_anti_clockwise]
+    elif orientation_actuel == HC.W:
+        if orientation_voulu == HC.N:
+            return [hr.turn_clockwise]
+        elif orientation_voulu == HC.E:
+            return [hr.turn_clockwise,hr.turn_clockwise]
+        elif orientation_voulu == HC.S:
+            return [hr.turn_anti_clockwise]

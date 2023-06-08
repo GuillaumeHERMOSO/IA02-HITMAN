@@ -204,9 +204,81 @@ def main4():
     print(o)
 
 def main5():
+    hr = HitmanReferee()
+    status = hr.start_phase1()
+    n = status["n"]
+    m = status["m"]
+    con = HitmanKnowledge(m=m, n=n)
+    con.ajout_voir_knowledge(status)
+    s0 = status["position"]
+    
+    status = hr.move()
+    con.ajout_voir_knowledge(status)
+    status = hr.turn_clockwise()
+    con.ajout_voir_knowledge(status)
+    status = hr.turn_clockwise()
+    con.ajout_voir_knowledge(status)
+
+    print(con)
+
+
+    i = 0
+    while (con.je_sais_pas_tt()):
+        i+=1
+        s0 = status["position"]
+        liste = get_liste_case_inconnu_plus_proche_hitman(s0[0],s0[1], n,m, con)
+        #con.je_sais_pas_tt()
+        test = []
+        while test == []:
+            goal = liste.pop(0)
+            print(f"on est en {status['position']} et on va en {goal}")
+            test, orientation_a_obtenir = case_connu_qui_peut_voir_une_case(goal, m, n, con.get_all_knowledge())
+            print (f" case pour voir : {test}")
+
+        s, d = astar_with_parent(s0, test, succ, con.get_all_knowledge(),m,n, con.get_liste_mur(), con.get_liste_casevu())
+        oro = orientation_a_obtenir[s]
+        
+        print(f"s = {s}")
+        chemin = []
+        while s != s0:
+            chemin.append(s)
+            s = d[s]
+        chemin.append(s0)
+        chemin.reverse()
+        
+        print(f"Le chemin est : {chemin}")
+        orientation= status["orientation"]
+        actions = chemin_to_action(chemin, orientation, con, hr)
+        for a in actions:
+            status = a()
+            con.ajout_voir_knowledge(status)
+            
+
+        
+        #os.system('cls' if os.name == 'nt' else 'clear')
+        print(con)
+        print(status["position"],status["orientation"], status["penalties"])
+
+        
+        tourner_action = tourner( status["orientation"],oro, hr)
+        print(f" on est en a la case {status['position']} avec l'orientation {status['orientation']} et on veut tourner en {oro}")
+
+        for a in tourner_action:
+            print(a.__name__)
+            status = a()
+            con.ajout_voir_knowledge(status)
+        print(con)
+        print(status["position"],status["orientation"], status["penalties"])
+        print("fin du tour\n\n\n\n")
+        #sleep(1)
+    print(hr.send_content(con.get_all_knowledge()))
+    status = hr.end_phase1()
+    print(status[1])
+
+
     pass
 
 
 if __name__ == "__main__":
-    main4()
+    main5()
     #main2()

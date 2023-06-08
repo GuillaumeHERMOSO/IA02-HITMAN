@@ -43,7 +43,8 @@ def heuristique1(s: State, goal: State, walls: List[State], case_vu: List[State]
 def insert_avec_heuristique(s : State, l : List[State], goal : State, walls : List[State], case_vu: List[State], map) -> List[State]:
     """Insertion dans la liste l de l'état s en fonction de l'heuristique"""
     l.append(s)
-    l.sort(key=lambda x: heuristique1(x, goal, walls, case_vu, map))
+    if len(l) > 1:
+        l.sort(key=lambda x: heuristique1(x, goal, walls, case_vu, map))
     return l
 
 def remove_1(l):
@@ -52,13 +53,13 @@ def remove_1(l):
 def succ(s: State, m: int, n:int, dico_val: dict[tuple[int, int], HC] ) -> List[State]:
     """Retourne les successeurs de l'état s on verifira les bordures de la carte"""
     l = []
-    if s[0] >0 and dico_val[(s[0]-1, s[1])] != HC.WALL:
+    if s[0] >0 and (s[0]-1, s[1]) in dico_val.keys() and dico_val[(s[0]-1, s[1])] != HC.WALL:
         l.append((s[0]-1, s[1]))
-    if s[0] < n-1 and dico_val[(s[0]+1, s[1])] != HC.WALL:
+    if s[0] < n-1 and (s[0]+1, s[1]) in dico_val.keys() and dico_val[(s[0]+1, s[1])] != HC.WALL:
         l.append((s[0]+1, s[1]))
-    if s[1] > 0 and dico_val[(s[0], s[1]-1)] != HC.WALL:
+    if s[1] > 0 and (s[0], s[1]-1) in dico_val.keys() and dico_val[(s[0], s[1]-1)] != HC.WALL:
         l.append((s[0], s[1]-1))
-    if s[1] < m-1 and dico_val[(s[0], s[1]+1)] != HC.WALL:
+    if s[1] < m-1 and (s[0], s[1]+1) in dico_val.keys() and dico_val[(s[0], s[1]+1)] != HC.WALL:
         l.append((s[0], s[1]+1))
     return l
 
@@ -103,7 +104,7 @@ def print_map(dict_map: dict[tuple[int, int], str], walls: List[State], case_vu:
 
 def astar_with_parent(
                     s0: State,
-                    goal: State,
+                    goals: List[State],
                     succ: Callable[[State], List[State]],
                     dico_val: dict[tuple[int, int], HC], 
                     m: int,
@@ -116,12 +117,13 @@ def astar_with_parent(
     l = [s0]
     while l != []:
         s, l = remove_1(l)
-        if s == goal:
+        if s in goals:
             return s, d
+        print(succ(s, m, n, dico_val))
         for s2 in succ(s, m, n, dico_val):
             if s2 not in d:
                 d[s2] = s
-                l = insert_avec_heuristique(s2, l, goal, walls, case_vu, dico_val)
+                l = insert_avec_heuristique(s2, l, goals[0], walls, case_vu, dico_val)
     return None, d
 
 def coup_chemin (l : List[State], map : dict[tuple[int, int], str], ) -> int:
@@ -133,6 +135,43 @@ def coup_chemin (l : List[State], map : dict[tuple[int, int], str], ) -> int:
         else:
             cpt += 1
     return cpt
+
+def case_connu_qui_peut_voir_une_case(case : State, m:int, n:int, dico_val : dict[tuple[int, int], HC]) -> Tuple[List[State], dict[State, HC]]:
+    """ fct qui retourne les postion qui peuvent voir la case sachant qu'on peut voir a 3 cases de distance si il y a rien devant"""
+    case_pour_voir = []
+    orientation_a_obtenir = {}
+    for a in range(1,4):
+        if case[0]+a < n and (case[0]+a,case[1]) in dico_val.keys() and dico_val[(case[0]+a,case[1])] == HC.EMPTY:
+            case_pour_voir.append((case[0]+a,case[1]))
+        else:
+            break
+    for a in range(1,4):
+        if case[0]-a >= 0 and (case[0]-a,case[1]) in dico_val.keys() and dico_val[(case[0]-a,case[1])] == HC.EMPTY:
+            case_pour_voir.append((case[0]-a,case[1]))
+        else:
+            break
+    for a in range(1,4):
+        if case[1]+a < m and (case[0],case[1]+a) in dico_val.keys() and dico_val[(case[0],case[1]+a)] == HC.EMPTY:
+            case_pour_voir.append((case[0],case[1]+a))
+        else:
+            break
+    for a in range(1,4):
+        if case[1]-a >= 0 and (case[0],case[1]-a) in dico_val.keys() and dico_val[(case[0],case[1]-a)] == HC.EMPTY:
+            case_pour_voir.append((case[0],case[1]-a))
+        else:
+            break
+    for c in case_pour_voir:
+        if c[0] == case[0]:
+            if c[1] > case[1]:
+                orientation_a_obtenir[c] = HC.S
+            else:
+                orientation_a_obtenir[c] = HC.N
+        else:
+            if c[0] > case[0]:
+                orientation_a_obtenir[c] = HC.W
+            else:
+                orientation_a_obtenir[c] = HC.E
+    return case_pour_voir, orientation_a_obtenir
 
 def main1():
     map, walls, case_vu = gen_test_map(10,10)
