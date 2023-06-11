@@ -78,6 +78,10 @@ def exec_gophersat(
 
     return True, [int(x) for x in model]
 
+def add_list_to_set(seta: set, liste_a: List):
+    for elt in liste_a:
+        seta.add(elt)
+    return seta
 
 def test_deduction(filename: str, var_tester: int):
     # on ajoute la negation de la variable a tester dans le ficher
