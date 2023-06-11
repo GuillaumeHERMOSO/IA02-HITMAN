@@ -118,7 +118,7 @@ def main2() :
 
     test_deduction("test2.cnf", 1)
 
-def main4():
+
     # MARCHE SI LA CARTE EST CONNUE et complete
     complete_map_example = {
     (0, 5): HC.EMPTY,
@@ -268,6 +268,8 @@ def main5():
             status = a()
             con.ajout_voir_knowledge(status)
         
+        con.affichage_vison()
+        print("\n _____________________________________________________________________________________________\n")
         print(con)
         print(status["position"],status["orientation"], status["penalties"])
         print("fin du tour\n\n\n\n")
