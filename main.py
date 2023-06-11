@@ -212,7 +212,11 @@ def main5():
     con = HitmanKnowledge(m=m, n=n)
     con.ajout_voir_knowledge(status)
     print(con)
+    
     input("Appuyer sur une touche pour continuer")
+    status = debut_map(hr,con)
+    print(con)
+    print(status["position"],status["orientation"], status["penalties"])
     s0 = status["position"]
     visited = [s0]
 
