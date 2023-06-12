@@ -9,7 +9,7 @@ from src.contraintes import *
 from src.arbitre.hitman import *
 from src.sat import *
 
-import Class_HitmanKnowledge
+from src.Class_HitmanKnowledge import HitmanKnowledge
 
 Grid = List[List[int]]
 PropositionnalVariable = int

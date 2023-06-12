@@ -45,16 +45,43 @@ def nbr_inconu_autour_hitman(x :int, y :int, know :HitmanKnowledge):
 
     return nbr
 
+def nbr_mur_coller(pos : State, walls) -> int:
+    """ retourne le nombre de mur autour de pos"""
+    res = 0
+    for a in range(-1,2):
+        if (pos[0]+a, pos[1]) in walls:
+            res +=1
+        if (pos[0], pos[1]+a) in walls:
+            res +=1
+    return res
+
+def nbr_inconu_coller(pos : State, know:HitmanKnowledge)->int:
+    """ Retourne le nombre de case inconnu autour de pos"""
+    dico = know.get_all_knowledge()
+    m = know.m
+    n = know.n
+    res = 0
+    for a in range(-1,2):
+        if pos[0]+a<n and pos[0]+a>0 and (pos[0]+a, pos[1]) not in dico:
+            res +=1
+        if pos[1]+a<m and pos[1]+a>0 and (pos[0], pos[1]+a) not in dico:
+            res +=1
+    return res
+    
+
+
 def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know :HitmanKnowledge) -> List[Tuple[int,int]]:
     """ Retourne la liste des cases inconnu les plus proche de hitman trier par le calcul de la distance de manhattan et le nombre de mur entre hitman et la case"""
     case = []
     walls = know.get_liste_mur()
+    case_vu = know.get_liste_casevu()
 
     for i in range(n):
         for j in range(m):
             if (i,j) not in know.knowledge or  know.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
                 case.append((i,j))
-    case.sort(key=lambda k: (distanceManhattan(k,(x,y))))
+    # case.sort(key=lambda k: (distanceManhattan(k,(x,y)) - 5*nbr_mur_coller(k,walls) - 2*nbr_inconu_coller(k,know)))
+    case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu) ))
     #print(case)
     #TODO trier     case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5* nbr_wall_entre((x[0],x[1]),(x,y),walls)))
 
