@@ -42,11 +42,12 @@ def heuristique1(s0 : State, s: State, goal: State, walls: List[State], case_vu:
     a = 0
     if s in visited:
         a = 5
-    return distanceManhattan(s, s0) + distanceManhattan(s, goal) + 5*is_case_vu(s, case_vu) + a
+    return  distanceManhattan(s, goal) + 10*is_case_vu(s, case_vu)
 
 def insert_avec_heuristique(s0 :State,s : State, l : List[State], goal : State, walls : List[State], case_vu: List[State], map, visited) -> List[State]:
     """Insertion dans la liste l de l'état s en fonction de l'heuristique"""
     l.append(s)
+    #print(l,"\n",case_vu)
     if len(l) > 1:
         l.sort(key=lambda x: heuristique1(s0,x, goal, walls, case_vu, map, visited))
     return l
@@ -133,7 +134,7 @@ def astar_with_parent(
             if s2 not in d:
                 d[s2] = s
                 l = insert_avec_heuristique(s0, s2, l, goals[0], walls, case_vu, dico_val, visited)
-        print(f"l : {l}")
+        #print(f"l : {l}")
     return None, d
 
 def coup_chemin (l : List[State], map : dict[tuple[int, int], str], ) -> int:
