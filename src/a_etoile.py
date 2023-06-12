@@ -37,12 +37,12 @@ def heuristique1(s0 : State, s: State, goal: State, walls: List[State], case_vu:
     et à ajouter le nombre de murs entre les deux états
     """
     if map[s] == HC.WALL:
-        return
+        return 10000
     #10* nbr_wall_entre(s, goal, walls)
     a = 0
     if s in visited:
         a = 5
-    return  distanceManhattan(s, goal) + 10*is_case_vu(s, case_vu)
+    return  distanceManhattan(s, goal) + 10*is_case_vu(s, case_vu) + a
 
 def insert_avec_heuristique(s0 :State,s : State, l : List[State], goal : State, walls : List[State], case_vu: List[State], map, visited) -> List[State]:
     """Insertion dans la liste l de l'état s en fonction de l'heuristique"""
@@ -52,7 +52,7 @@ def insert_avec_heuristique(s0 :State,s : State, l : List[State], goal : State, 
         l.sort(key=lambda x: heuristique1(s0,x, goal, walls, case_vu, map, visited))
     return l
 
-def remove_1(l):
+def remove_1(l: List[State]) -> Tuple[State,List[State]]:
     # On enleve le premier element de la liste
     return l.pop(0), l
 
@@ -74,48 +74,10 @@ def succ(s: State, m: int, n:int, dico_val: dict[tuple[int, int], HC] ) -> List[
     return l
 
 
-
-def gen_test_map(a,b) ->dict[tuple[int, int], str]:
-    """ Generation de carte aleatoire pour tester l'heuristique """
-    import random
-    walls = []
-    case_vu = []
-    dict_map = {}
-    for i in range(a):
-        for j in range(b):
-            # on ajoute un mur 0.1 ou on est vu par un garde 0.2 ou rien
-            if random.random() < 0.1:
-                walls.append((i,j))
-                dict_map[(i,j)] = "mur"
-            elif random.random() < 0.2:
-                case_vu.append((i,j))
-                dict_map[(i,j)] = "vu "
-            else:
-                dict_map[(i,j)] = "   "
-    dict_map[(0,0)] = "   "
-    dict_map[(0,1)] = "   "
-    dict_map[(1,0)] = "   "
-    dict_map[(8,9)] = "   "
-    dict_map[(9,8)] = "   "
-    dict_map[(9,9)] = "   "
-    return dict_map, walls, case_vu
-
-def print_map(dict_map: dict[tuple[int, int], str], walls: List[State], case_vu: List[State]):
-    """ Affichage de la carte """
-    for i in range(10):
-        for j in range(10):
-            if (i,j) in walls:
-                print("X", end=" | ")
-            elif (i,j) in case_vu:
-                print("O", end=" | ")
-            else:
-                print(" ", end=" | ")
-        print()
-
 def astar_with_parent(
                     s0: State,
                     goals: List[State],
-                    succ: Callable[[State], List[State]],
+                    succ: Callable[[State,int, int, dict[State, HC]], List[State]],
                     dico_val: dict[tuple[int, int], HC], 
                     m: int,
                     n: int,

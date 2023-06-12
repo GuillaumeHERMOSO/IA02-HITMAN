@@ -15,7 +15,7 @@ def trois_six(hr : HitmanReferee, know : HitmanKnowledge):
     #print(status["position"])
     return status
 
-def orientation_hitman(status :Dict):
+def orientation_hitman(status :Dict) ->Tuple[int,int]:
     orientation :HC  = status["orientation"]
     if orientation == HC.N:
         offset = 0, 1
@@ -80,11 +80,10 @@ def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know
         for j in range(m):
             if (i,j) not in know.knowledge or  know.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
                 case.append((i,j))
+
+    #TODO trouver un meuilleur heuristique pour trier
     # case.sort(key=lambda k: (distanceManhattan(k,(x,y)) - 5*nbr_mur_coller(k,walls) - 2*nbr_inconu_coller(k,know)))
     case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu) ))
-    #print(case)
-    #TODO trier     case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5* nbr_wall_entre((x[0],x[1]),(x,y),walls)))
-
     return case
 
 def get_action(pos1 :Tuple[int,int], pos2 :Tuple[int,int], orientation : HC, know :HitmanKnowledge, hr:HitmanReferee) -> Tuple[List[Callable[[],None]],HC]:
@@ -183,7 +182,7 @@ def affichage_liste_action(actions :List[Callable[[],None]]) -> None:
         print(a.__name__)
     pass
 
-def tourner(orientation_actuel: HC, orientation_voulu: HC, hr:HitmanReferee) -> List[Callable[[],None]]:
+def tourner(orientation_actuel: HC, orientation_voulu: HC, hr:HitmanReferee) -> List:
     """ Renvoie une liste d'action pour tourner de orientation_actuel a orientation_voulu"""
     if orientation_actuel == orientation_voulu:
         return []
