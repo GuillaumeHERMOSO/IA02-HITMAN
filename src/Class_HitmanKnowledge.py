@@ -22,13 +22,13 @@ class HitmanKnowledge:
 
 
     def orientation_garde(self,garde):
-        if garde.name == HC.GUARD_N.name :
+        if garde in [HC.GUARD_N, HC.N]:
             offset = 0, 1
-        elif garde.name  == HC.GUARD_E.name :
+        elif garde in [HC.GUARD_E, HC.E]:
             offset = 1, 0
-        elif garde.name  == HC.GUARD_S.name :
+        elif garde in [HC.GUARD_S, HC.S]:
             offset = 0, -1
-        elif garde.name  == HC.GUARD_W.name :
+        elif garde in [HC.GUARD_W, HC.W]:
             offset = -1, 0
         return offset
     
@@ -39,7 +39,7 @@ class HitmanKnowledge:
         self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
         for position in self.knowledge:
             vision = []
-            if self.knowledge[position] in  [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W]:
+            if self.knowledge[position] in  [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W, HC.N, HC.E, HC.S, HC.W]:
                 offset_x, offset_y = self.orientation_garde(self.knowledge[position])
                 x,y = position
                 for _ in range(0, 2):
@@ -55,7 +55,7 @@ class HitmanKnowledge:
         pass
 
     def add_knowledge(self, position: Tuple[int, int], content: HC):
-        if (not self.has_knowledge(position[0], position[1])):
+        if (not self.has_knowledge(position[0], position[1]) or self.knowledge[position] in [HC.N, HC.E, HC.S, HC.W]):
             self.knowledge[position] = content
             self.maj_vision_garde()
             pass
@@ -105,6 +105,41 @@ class HitmanKnowledge:
     def ajout_voir_knowledge(self, status: Dict):
         for pos,valeur in status["vision"] :
             self.add_knowledge(pos,valeur)
+        if status["is_in_guard_range"]:
+            # on est vu en position pos 
+            print(f"\n\n\non est vu en position {status['position']} on mets des gardes potentiel")
+            pos = status["position"]
+            # on verifie si on a pas deja l'info :
+            a_nord = [(pos[0],pos[1]+1),(pos[0],pos[1]+2)]
+            for pos in a_nord :
+                if self.has_knowledge(pos[0],pos[1]) and self.knowledge[pos] == HC.GUARD_S:
+                    return
+            a_sud = [(pos[0],pos[1]-1),(pos[0],pos[1]-2)]
+            for pos in a_sud :
+                if self.has_knowledge(pos[0],pos[1]) and self.knowledge[pos] == HC.GUARD_N:
+                    return
+            a_est = [(pos[0]+1,pos[1]),(pos[0]+2,pos[1])]
+            for pos in a_est :
+                if self.has_knowledge(pos[0],pos[1]) and self.knowledge[pos] == HC.GUARD_W:
+                    return
+            if (pos[1]+1 < self.m):
+                self.add_knowledge((pos[0],pos[1]+1),HC.S)
+            if (pos[1]+2 < self.m):
+                self.add_knowledge((pos[0],pos[1]+2),HC.S)
+            if (pos[0]+1 < self.n):
+                self.add_knowledge((pos[0]+1,pos[1]),HC.W)
+            if (pos[0]+2 < self.n):
+                self.add_knowledge((pos[0]+2,pos[1]),HC.W)
+            if (pos[1]-1 >= 0):
+                self.add_knowledge((pos[0],pos[1]-1),HC.N)
+            if (pos[1]-2 >= 0):
+                self.add_knowledge((pos[0],pos[1]-2),HC.N)
+            if (pos[0]-1 >= 0):
+                self.add_knowledge((pos[0]-1,pos[1]),HC.E)
+            if (pos[0]-2 >= 0):
+                self.add_knowledge((pos[0]-2,pos[1]),HC.E)
+
+
         pass
 
     def je_sais_pas_tt(self):
@@ -112,6 +147,8 @@ class HitmanKnowledge:
         for i in range(self.n):
             for j in range(self.m):
                 if not self.has_knowledge(i,j):
+                    return True
+                if self.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
                     return True
         return False
 

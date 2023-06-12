@@ -32,34 +32,43 @@ def is_case_vu(s: State, case_vu: List[State]) -> bool:
         return True
     return False
 
-def heuristique1(s: State, goal: State, walls: List[State], case_vu: List[State], map : dict[tuple[int, int], HC] ) -> int:
+def heuristique1(s0 : State, s: State, goal: State, walls: List[State], case_vu: List[State], map : dict[tuple[int, int], HC], visited ) -> int:
     """Heuristique qui consiste à calculer la distance de Manhattan entre l'état courant et l'état goal
     et à ajouter le nombre de murs entre les deux états
     """
     if map[s] == HC.WALL:
         return
-    return distanceManhattan(s, goal) + 10* nbr_wall_entre(s, goal, walls) + 3*is_case_vu(s, case_vu)
+    #10* nbr_wall_entre(s, goal, walls)
+    a = 0
+    if s in visited:
+        a = 5
+    return distanceManhattan(s, s0) + distanceManhattan(s, goal) + 5*is_case_vu(s, case_vu) + a
 
-def insert_avec_heuristique(s : State, l : List[State], goal : State, walls : List[State], case_vu: List[State], map) -> List[State]:
+def insert_avec_heuristique(s0 :State,s : State, l : List[State], goal : State, walls : List[State], case_vu: List[State], map, visited) -> List[State]:
     """Insertion dans la liste l de l'état s en fonction de l'heuristique"""
     l.append(s)
     if len(l) > 1:
-        l.sort(key=lambda x: heuristique1(x, goal, walls, case_vu, map))
+        l.sort(key=lambda x: heuristique1(s0,x, goal, walls, case_vu, map, visited))
     return l
 
 def remove_1(l):
+    # On enleve le premier element de la liste
     return l.pop(0), l
 
 def succ(s: State, m: int, n:int, dico_val: dict[tuple[int, int], HC] ) -> List[State]:
     """Retourne les successeurs de l'état s on verifira les bordures de la carte"""
+    # On ajoute dans l'ordre droite, bas, gauche, haut
     l = []
-    if s[0] >0 and (s[0]-1, s[1]) in dico_val.keys() and dico_val[(s[0]-1, s[1])] != HC.WALL:
-        l.append((s[0]-1, s[1]))
-    if s[0] < n-1 and (s[0]+1, s[1]) in dico_val.keys() and dico_val[(s[0]+1, s[1])] != HC.WALL:
+    if s[0] < n-1 and (s[0]+1, s[1]) in dico_val.keys() and dico_val[(s[0]+1, s[1])] in [HC.EMPTY, HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
         l.append((s[0]+1, s[1]))
-    if s[1] > 0 and (s[0], s[1]-1) in dico_val.keys() and dico_val[(s[0], s[1]-1)] != HC.WALL:
+
+    if s[0] >0 and (s[0]-1, s[1]) in dico_val.keys() and dico_val[(s[0]-1, s[1])] in [HC.EMPTY, HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
+        l.append((s[0]-1, s[1]))
+
+    if s[1] > 0 and (s[0], s[1]-1) in dico_val.keys() and dico_val[(s[0], s[1]-1)] in [HC.EMPTY, HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
         l.append((s[0], s[1]-1))
-    if s[1] < m-1 and (s[0], s[1]+1) in dico_val.keys() and dico_val[(s[0], s[1]+1)] != HC.WALL:
+
+    if s[1] < m-1 and (s[0], s[1]+1) in dico_val.keys() and dico_val[(s[0], s[1]+1)] in [HC.EMPTY, HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
         l.append((s[0], s[1]+1))
     return l
 
@@ -110,7 +119,8 @@ def astar_with_parent(
                     m: int,
                     n: int,
                     walls: List[State], 
-                    case_vu: List[State]) -> Tuple[Optional[State], Dict[State, Optional[State]]]:
+                    case_vu: List[State],
+                    visited: List [State]) -> Tuple[Optional[State], Dict[State, Optional[State]]]:
     """A* avec parent"""
     d = {}
     d[s0] = None
@@ -119,11 +129,11 @@ def astar_with_parent(
         s, l = remove_1(l)
         if s in goals:
             return s, d
-        print(succ(s, m, n, dico_val))
         for s2 in succ(s, m, n, dico_val):
             if s2 not in d:
                 d[s2] = s
-                l = insert_avec_heuristique(s2, l, goals[0], walls, case_vu, dico_val)
+                l = insert_avec_heuristique(s0, s2, l, goals[0], walls, case_vu, dico_val, visited)
+        print(f"l : {l}")
     return None, d
 
 def coup_chemin (l : List[State], map : dict[tuple[int, int], str], ) -> int:
@@ -140,22 +150,35 @@ def case_connu_qui_peut_voir_une_case(case : State, m:int, n:int, dico_val : dic
     """ fct qui retourne les postion qui peuvent voir la case sachant qu'on peut voir a 3 cases de distance si il y a rien devant"""
     case_pour_voir = []
     orientation_a_obtenir = {}
+    # soit c'est vide
     for a in range(1,4):
+        if case[0]+a < n and (case[0]+a,case[1]) in dico_val.keys() and dico_val[(case[0]+a,case[1])] in [HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
+            case_pour_voir.append((case[0]+a,case[1]))
+            break
         if case[0]+a < n and (case[0]+a,case[1]) in dico_val.keys() and dico_val[(case[0]+a,case[1])] == HC.EMPTY:
             case_pour_voir.append((case[0]+a,case[1]))
         else:
             break
     for a in range(1,4):
+        if case[0]-a >= 0 and (case[0]-a,case[1]) in dico_val.keys() and dico_val[(case[0]-a,case[1])] in [HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
+            case_pour_voir.append((case[0]-a,case[1]))
+            break
         if case[0]-a >= 0 and (case[0]-a,case[1]) in dico_val.keys() and dico_val[(case[0]-a,case[1])] == HC.EMPTY:
             case_pour_voir.append((case[0]-a,case[1]))
         else:
             break
     for a in range(1,4):
+        if case[1]+a < m and (case[0],case[1]+a) in dico_val.keys() and dico_val[(case[0],case[1]+a)] in [HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
+            case_pour_voir.append((case[0],case[1]+a))
+            break
         if case[1]+a < m and (case[0],case[1]+a) in dico_val.keys() and dico_val[(case[0],case[1]+a)] == HC.EMPTY:
             case_pour_voir.append((case[0],case[1]+a))
         else:
             break
     for a in range(1,4):
+        if case[1]-a >= 0 and (case[0],case[1]-a) in dico_val.keys() and dico_val[(case[0],case[1]-a)] in [HC.SUIT, HC.TARGET, HC.CIVIL_E, HC.CIVIL_S, HC.CIVIL_W, HC.CIVIL_N]:
+            case_pour_voir.append((case[0],case[1]-a))
+            break
         if case[1]-a >= 0 and (case[0],case[1]-a) in dico_val.keys() and dico_val[(case[0],case[1]-a)] == HC.EMPTY:
             case_pour_voir.append((case[0],case[1]-a))
         else:

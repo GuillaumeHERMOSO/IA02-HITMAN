@@ -52,7 +52,7 @@ def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know
 
     for i in range(n):
         for j in range(m):
-            if (i,j) not in know.knowledge:
+            if (i,j) not in know.knowledge or  know.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
                 case.append((i,j))
     case.sort(key=lambda k: (distanceManhattan(k,(x,y))))
     #print(case)
@@ -188,3 +188,259 @@ def tourner(orientation_actuel: HC, orientation_voulu: HC, hr:HitmanReferee) -> 
             return [hr.turn_clockwise,hr.turn_clockwise]
         elif orientation_voulu == HC.S:
             return [hr.turn_anti_clockwise]
+        
+
+def debut_map(hr : HitmanReferee, know : HitmanKnowledge):
+    status = hr.start_phase1()
+    pos = status["position"]
+    orientation = status["orientation"]
+    n = status["n"]
+    m = status["m"]
+    know.ajout_voir_knowledge(status)
+    # une position est un tuple (x,y), x dans 0 a n-1 et y dans 0 a m-1
+    # On regarde ce qu'il y a autour de nous mais pas la bordure de la map
+    bordure_N = [(x,m-1) for x in range(0,n-1)]
+    bordure_E = [(n-1,y) for y in range(0,m-1)]
+    bordure_S = [(x,0) for x in range(0,n-1)]
+    bordure_W = [(0,y) for y in range(0,m-1)]
+
+    # si on est dans un angle on regarde les deux cotes
+    if pos == (0,0):
+        # on doit regarder a l'est et au nord
+        if orientation == HC.N:
+            #on connait deja le nord
+            #on regarde a l'est 
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au nord
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'est
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.S:
+            #on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+    elif pos == (n-1,0):
+        # on doit regarder a l'ouest et au nord
+        if orientation == HC.N:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.S:
+            #on regarde a l'ouest
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au nord
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au nord
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+    elif pos == (n-1,m-1):
+        # on doit regarder a l'ouest et au sud
+        if orientation == HC.S:
+            #on regarde a l'ouest
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+
+        elif orientation == HC.N:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au sud
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'ouest
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+    elif pos == (0,m-1):
+        # on doit regarder a l'est et au sud
+        if orientation == HC.S:
+            #on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au sud
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.N:
+            #on regarde a l'est
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au sud
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+
+    elif pos in bordure_N:
+        # on doit regarder a l'ouest, a l'est et au sud
+        if orientation == HC.N:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            # on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au sud
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'ouest
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.S:
+            #on regarde a l'ouest
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'est
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+    elif pos in bordure_S:
+        # on doit regarder a l'ouest, a l'est et au nord
+        if orientation == HC.S:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            # on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.N:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au nord
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'est
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+    elif pos in bordure_E:
+        # on doit regarder au nord, a l'ouest et au sud
+        if orientation == HC.E:
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            # on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.S:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.W:
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.N:
+            #on regarde a l'ouest
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+    elif pos in bordure_W:
+        # on doit regarder au nord, a l'est et au sud
+        if orientation == HC.W:
+            #on regarde au nord
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde a l'est
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            # on regarde au sud
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.S:
+            #on regarde a l'est
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.E:
+            #on regarde au nord
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au sud
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+            status = hr.turn_anti_clockwise()
+            know.ajout_voir_knowledge(status)
+        elif orientation == HC.N:
+            #on regarde a l'est
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+            #on regarde au sud
+            status = hr.turn_clockwise()
+            know.ajout_voir_knowledge(status)
+    return status
