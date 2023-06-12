@@ -83,6 +83,8 @@ def add_list_to_set(seta: set, liste_a: List):
         seta.add(elt)
     return seta
 
+
+
 def test_deduction(filename: str, var_tester: int):
     # on ajoute la negation de la variable a tester dans le ficher
     try:

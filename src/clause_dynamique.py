@@ -9,15 +9,16 @@ from src.contraintes import *
 from src.arbitre.hitman import *
 from src.sat import *
 
+import Class_HitmanKnowledge
 
 Grid = List[List[int]]
 PropositionnalVariable = int
 Literal = int
 Clause = List[Literal]
-ClauseBase = List[Clause]
+ClauseBase = set[Clause]
 Model = List[Literal]
 
-def ecouter(dico,dict_var_to_num) : # ecouter avec l'arbitre
+def ecouter(seta : set, dico : HitmanReferee.start_phase1(),dict_var_to_num) : # ecouter avec l'arbitre
 
     # On récupère les valeurs du dico de l'arbitre :
     k = dico["hear"]
@@ -48,18 +49,16 @@ def ecouter(dico,dict_var_to_num) : # ecouter avec l'arbitre
     for elt in variables :
         r.append(dict_var_to_num[elt]) # Transformation en valeurs utilisable dans SAT
     if k >= 5:
-        return at_least_k(5,r) # Si on entend au moins 5 personnes
+        return add_list_to_set(seta,at_least_k(5,r)) # Si on entend au moins 5 personnes
 
-    return exactly_k(k,r)  # Si on entend moins de 5 personnes
+    return add_list_to_set(seta,exactly_k(k,r))  # Si on entend moins de 5 personnes
 
-def voir(dico,dict_var_to_num) : # Voir pour le sat
+def add_voir(seta : set,dict_var_to_num, dico : Class_HitmanKnowledge.HitmanKnowledge) : # Voir pour le sat
     variables = []
-    for pos,valeur in dico["vision"] :
+    for pos,valeur in dico.affichage_vison() :
         x,y = pos
         variables.append(dict_var_to_num[f"{x}{y}_P"])  # Transformation en valeurs utilisable dans SAT
-    return variables
-
-
+    return add_list_to_set(seta,variables)
 
 def orientation_garde(garde):
     if garde == HC.GUARD_N:

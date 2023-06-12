@@ -5,7 +5,7 @@ Grid = List[List[int]]
 PropositionnalVariable = int
 Literal = int
 Clause = List[Literal]
-ClauseBase = List[Clause]
+ClauseBase = set[Clause]
 Model = List[Literal]
 
 from src.arbitre.hitman import *
@@ -19,7 +19,8 @@ class HitmanKnowledge:
     
     def has_knowledge(self, i: int, j: int) -> bool:
         return (i, j) in self.knowledge
-    
+
+
     def orientation_garde(self,garde):
         if garde.name == HC.GUARD_N.name :
             offset = 0, 1
@@ -134,12 +135,12 @@ class HitmanKnowledge:
     
 
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
-    r :ClauseBase =[]
+    r :ClauseBase = set()
     for i,v in Dico_know.items():
         #print(v)
         if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W]:
             #print(f"{i[0]}{i[1]}_P")
-            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
+            r.add(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
     return r
 
 

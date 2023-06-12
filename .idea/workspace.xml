@@ -4,8 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="UPDATE hitman.py">
+    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="Rajout de conversion liste-&gt;set">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_05_2023_20_09_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_05_2023_20_09__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_05_2023_20_16_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_05_2023_20_16__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Class_HitmanKnowledge.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Class_HitmanKnowledge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/clause_dynamique.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/clause_dynamique.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sat.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sat.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +70,7 @@
       <workItem from="1684948954651" duration="9361000" />
       <workItem from="1685034600831" duration="270000" />
       <workItem from="1685081447186" duration="10836000" />
+      <workItem from="1686478625216" duration="4964000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1685034653894</created>
@@ -91,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686076239983</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Rajout de conversion liste-&gt;set">
+      <created>1686478746367</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1686478746367</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,7 +128,8 @@
     <MESSAGE value="Update" />
     <MESSAGE value="Ajout de la vision des gardes" />
     <MESSAGE value="UPDATE hitman.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="UPDATE hitman.py" />
+    <MESSAGE value="Rajout de conversion liste-&gt;set" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rajout de conversion liste-&gt;set" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/IA02_HITMAN$verite_sur_le_monde.coverage" NAME="verite_sur_le_monde Coverage Results" MODIFIED="1684133559208" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
