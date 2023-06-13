@@ -73,98 +73,23 @@ class HitmanKnowledge:
 
                 
 
-    # def __str__(self) -> str:
-    #     """Affichage de la matrice de connaissance avec 0,0 en bas à gauche, en haut a gauche (0,m) et (n,m) en haut à droite, si il y a rien on affiche x"""
-    #     r =""
-    #     for j in range(self.m-1,-1,-1):
-    #         r += str(j) + "      "
-    #         for i in range(self.n):
-    #             if self.has_knowledge(i,j):
-    #                 #format permet d'avoir la meme taille pour chaque case  max 10 caractere, ^ pour centrer
-    #                 r += format(self.get_knowledge((i,j)).name,"^11") +" "
-    #
-    #             else:
-    #                 r += format("x","^11") +" "
-    #         r +="\n"
-    #     # affichage des indices en bas 0,1, ... , n-1
-    #     r += "       " + " ".join([format(str(i),"^11") for i in range(self.n)])
-    #     return r
-
-    def __str__(self, hr: HitmanReferee) -> str:
+    def __str__(self) -> str:
         """Affichage de la matrice de connaissance avec 0,0 en bas à gauche, en haut a gauche (0,m) et (n,m) en haut à droite, si il y a rien on affiche x"""
-        dico = hr.start_phase1()
-        affichage = ""
-        y,x = dico["position"]
-        r = []*self.m*3
-        i_r = -2
-        j_r = -2
-        for elt in r :
-            elt.append([" "]*self.n*3)
-        r[x][y] = "O"
-        if dico["orientation"] == HC.S :
-            r[x][y+1] = ">"
-        elif dico["orientation"] == HC.N :
-            r[x][y-1] = "<"
-        elif dico["orientation"] == HC.E :
-            r[x-1][y] = "v"
-        elif dico["orientation"] == HC.W :
-            r[x+1][y] = "^"
-
-        for j in range(self.m - 1, -1, -1):
-            i_r +=3
+        r =""
+        for j in range(self.m-1,-1,-1):
+            r += str(j) + "      "
             for i in range(self.n):
-                j_r+=3
-                if self.has_knowledge(i, j):
-                    if "GUARD" in self.get_knowledge((i,j)).name :
-                        r[i_r][j_r] = "G"
-                        if "_S" in self.get_knowledge((i,j)).name :
-                            r[i_r][j_r+1] = ">"
-                        elif "_N" in self.get_knowledge((i,j)).name :
-                            r[i_r][j_r-1] = "<"
-                        elif "_E" in self.get_knowledge((i,j)).name :
-                            r[i_r-1][j_r] = "^"
-                        elif "_W" in self.get_knowledge((i,j)).name :
-                            r[i_r+1][j_r] = "v"
+                if self.has_knowledge(i,j):
+                    #format permet d'avoir la meme taille pour chaque case  max 10 caractere, ^ pour centrer
+                    r += format(self.get_knowledge((i,j)).name,"^11") +" "
 
-                    elif "CIVIL" in self.get_knowledge((i,j)).name :
-                        r[i_r][j_r] = "C"
-                        if "_S" in self.get_knowledge((i,j)).name :
-                            r[i_r][j_r+1] = ">"
-                        elif "_N" in self.get_knowledge((i,j)).name :
-                            r[i_r][j_r-1] = "<"
-                        elif "_E" in self.get_knowledge((i,j)).name :
-                            r[i_r-1][j_r] = "^"
-                        elif "_W" in self.get_knowledge((i,j)).name :
-                            r[i_r+1][j_r] = "v"
-                    elif "WALL" in self.get_knowledge((i,j)).name :
-                        if "WALL" not in self.get_knowledge((i-1,j)).name and i-1>0 : ## Nord -> Ouest
-                            r[i_r-1][j_r-1] = "|"
-                            r[i_r][j_r-1] = "|"
-                            r[i_r+1][j_r-1] = "|"
-                        if "WALL" not in self.get_knowledge((i+1,j)).name and i+1<self.n : ## Sud -> Est
-                            r[i_r-1][j_r+1] = "|"
-                            r[i_r][j_r+1] = "|"
-                            r[i_r+1][j_r+1] = "|"
-                        if "WALL" not in self.get_knowledge((i,j+1)).name and j+1<self.m : ## Est -> Nord
-                            r[i_r+1][j_r-1] = "_"
-                            r[i_r+1][j_r] = "_"
-                            r[i_r+1][j_r+1] = "_"
-                        if "WALL" not in self.get_knowledge((i, j -1 )).name and j-1<self.n:  ## Ouest -> Sud
-                            r[i_r - 1][j_r - 1] = "_"
-                            r[i_r - 1][j_r] = "_"
-                            r[i_r - 1][j_r + 1] = "_"
-                    elif "SUIT" in self.get_knowledge((i,j)).name :
-                        r[i_r][j_r] = "S"
-                    elif "TARGET" in self.get_knowledge((i,j)).name :
-                        r[i_r][j_r] = "T"
-                    elif "PIANO" in self.get_knowledge((i, j)).name:
-                        r[i_r][j_r] = "P"
                 else:
-                    r[i_r][j_r] = "X"
-            for ligne in r :
-                for elt in ligne :
-                    affichage += elt
-        return affichage
+                    r += format("x","^11") +" "
+            r +="\n"
+        # affichage des indices en bas 0,1, ... , n-1
+        r += "       " + " ".join([format(str(i),"^11") for i in range(self.n)])
+        return r
+
     
     def affichage_vison(self):
         r =""
@@ -414,6 +339,7 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
 
     # Affichage du tableau finale
     for ligne in tab_finale:
+        print()
         for elt in ligne:
             print(elt, end="   ")
         print()

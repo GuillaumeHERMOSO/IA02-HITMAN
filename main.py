@@ -2,9 +2,8 @@ import os
 import random
 from typing import List, Tuple
 from src.arbitre.hitman import *
-from src.clause_dynamique import *
-from src.clause_verite_sur_le_monde import *
 from src.Class_HitmanKnowledge import *
+from src.clause_verite_sur_le_monde import *
 from src.arbitre.hitman import HC
 from src.mouvement_phase1 import *
 from src.a_etoile import *
@@ -211,11 +210,11 @@ def main5():
     m = status["m"]
     con = HitmanKnowledge(m=m, n=n)
     con.ajout_voir_knowledge(status)
-    print(con)
+    afficher(con,hr)
     
     input("Appuyer sur une touche pour continuer")
     status = debut_map(hr,con)
-    print(con)
+    afficher(con,hr)
     print(status["position"],status["orientation"], status["penalties"])
     s0 = status["position"]
     visited = [s0]
@@ -257,7 +256,7 @@ def main5():
         for a in actions:
             status = a()
             con.ajout_voir_knowledge(status)
-        print(con)
+        afficher(con, hr)
         print(status["position"],status["orientation"], status["penalties"])
 
         #on est au bon endroit on tourne dans la direction nous permettant de voir la case inconnu        
@@ -270,7 +269,7 @@ def main5():
         
         con.affichage_vison()
         print("\n _____________________________________________________________________________________________\n")
-        print(con)
+        afficher(con, hr)
         print(status["position"],status["orientation"], status["penalties"])
         print("fin du tour\n\n\n\n")
         input("Appuyer sur une touche pour continuer")
