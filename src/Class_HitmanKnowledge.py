@@ -73,22 +73,98 @@ class HitmanKnowledge:
 
                 
 
-    def __str__(self) -> str:
+    # def __str__(self) -> str:
+    #     """Affichage de la matrice de connaissance avec 0,0 en bas à gauche, en haut a gauche (0,m) et (n,m) en haut à droite, si il y a rien on affiche x"""
+    #     r =""
+    #     for j in range(self.m-1,-1,-1):
+    #         r += str(j) + "      "
+    #         for i in range(self.n):
+    #             if self.has_knowledge(i,j):
+    #                 #format permet d'avoir la meme taille pour chaque case  max 10 caractere, ^ pour centrer
+    #                 r += format(self.get_knowledge((i,j)).name,"^11") +" "
+    #
+    #             else:
+    #                 r += format("x","^11") +" "
+    #         r +="\n"
+    #     # affichage des indices en bas 0,1, ... , n-1
+    #     r += "       " + " ".join([format(str(i),"^11") for i in range(self.n)])
+    #     return r
+
+    def __str__(self, hr: HitmanReferee) -> str:
         """Affichage de la matrice de connaissance avec 0,0 en bas à gauche, en haut a gauche (0,m) et (n,m) en haut à droite, si il y a rien on affiche x"""
-        r =""
-        for j in range(self.m-1,-1,-1):
-            r += str(j) + "      "
+        dico = hr.start_phase1()
+        affichage = ""
+        y,x = dico["position"]
+        r = []*self.m*3
+        i_r = -2
+        j_r = -2
+        for elt in r :
+            elt.append([" "]*self.n*3)
+        r[x][y] = "O"
+        if dico["orientation"] == HC.S :
+            r[x][y+1] = ">"
+        elif dico["orientation"] == HC.N :
+            r[x][y-1] = "<"
+        elif dico["orientation"] == HC.E :
+            r[x-1][y] = "v"
+        elif dico["orientation"] == HC.W :
+            r[x+1][y] = "^"
+
+        for j in range(self.m - 1, -1, -1):
+            i_r +=3
             for i in range(self.n):
-                if self.has_knowledge(i,j):
-                    #format permet d'avoir la meme taille pour chaque case  max 10 caractere, ^ pour centrer
-                    r += format(self.get_knowledge((i,j)).name,"^11") +" "
-                    
+                j_r+=3
+                if self.has_knowledge(i, j):
+                    if "GUARD" in self.get_knowledge((i,j)).name :
+                        r[i_r][j_r] = "G"
+                        if "_S" in self.get_knowledge((i,j)).name :
+                            r[i_r][j_r+1] = ">"
+                        elif "_N" in self.get_knowledge((i,j)).name :
+                            r[i_r][j_r-1] = "<"
+                        elif "_E" in self.get_knowledge((i,j)).name :
+                            r[i_r-1][j_r] = "^"
+                        elif "_W" in self.get_knowledge((i,j)).name :
+                            r[i_r+1][j_r] = "v"
+
+                    elif "CIVIL" in self.get_knowledge((i,j)).name :
+                        r[i_r][j_r] = "C"
+                        if "_S" in self.get_knowledge((i,j)).name :
+                            r[i_r][j_r+1] = ">"
+                        elif "_N" in self.get_knowledge((i,j)).name :
+                            r[i_r][j_r-1] = "<"
+                        elif "_E" in self.get_knowledge((i,j)).name :
+                            r[i_r-1][j_r] = "^"
+                        elif "_W" in self.get_knowledge((i,j)).name :
+                            r[i_r+1][j_r] = "v"
+                    elif "WALL" in self.get_knowledge((i,j)).name :
+                        if "WALL" not in self.get_knowledge((i-1,j)).name and i-1>0 : ## Nord -> Ouest
+                            r[i_r-1][j_r-1] = "|"
+                            r[i_r][j_r-1] = "|"
+                            r[i_r+1][j_r-1] = "|"
+                        if "WALL" not in self.get_knowledge((i+1,j)).name and i+1<self.n : ## Sud -> Est
+                            r[i_r-1][j_r+1] = "|"
+                            r[i_r][j_r+1] = "|"
+                            r[i_r+1][j_r+1] = "|"
+                        if "WALL" not in self.get_knowledge((i,j+1)).name and j+1<self.m : ## Est -> Nord
+                            r[i_r+1][j_r-1] = "_"
+                            r[i_r+1][j_r] = "_"
+                            r[i_r+1][j_r+1] = "_"
+                        if "WALL" not in self.get_knowledge((i, j -1 )).name and j-1<self.n:  ## Ouest -> Sud
+                            r[i_r - 1][j_r - 1] = "_"
+                            r[i_r - 1][j_r] = "_"
+                            r[i_r - 1][j_r + 1] = "_"
+                    elif "SUIT" in self.get_knowledge((i,j)).name :
+                        r[i_r][j_r] = "S"
+                    elif "TARGET" in self.get_knowledge((i,j)).name :
+                        r[i_r][j_r] = "T"
+                    elif "PIANO" in self.get_knowledge((i, j)).name:
+                        r[i_r][j_r] = "P"
                 else:
-                    r += format("x","^11") +" "
-            r +="\n"
-        # affichage des indices en bas 0,1, ... , n-1
-        r += "       " + " ".join([format(str(i),"^11") for i in range(self.n)])
-        return r
+                    r[i_r][j_r] = "X"
+            for ligne in r :
+                for elt in ligne :
+                    affichage += elt
+        return affichage
     
     def affichage_vison(self):
         r =""
@@ -169,6 +245,7 @@ class HitmanKnowledge:
                 r.append(pos)
         return r
 
+
     
 
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
@@ -179,5 +256,170 @@ def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var
             #print(f"{i[0]}{i[1]}_P")
             r.add(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
     return r
+
+
+
+def transpose_tableau(tableau):
+    n = len(tableau)
+    m = len(tableau[0])
+    tableau_transpose_inverse = [[0] * n for _ in range(m)]
+
+    for i in range(n):
+        for j in range(m):
+            tableau_transpose_inverse[j][i] = tableau[i][j]
+
+    tableau_transpose_inverse.reverse()
+
+
+
+    return tableau_transpose_inverse
+
+def ajouter_zeros_autour(tableau_original):
+    n = len(tableau_original)
+    tableau_resultat = [[0] * (3 * n) for _ in range(3 * n)]
+
+    for i in range(n):
+        for j in range(n):
+            x = 3 * i + 1
+            y = 3 * j + 1
+            tableau_resultat[x][y] = tableau_original[i][j]
+
+    return tableau_resultat
+def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
+    tableau = []
+
+    dico = hr.start_phase1()
+
+    x,y = dico["position"] # Position de Hitman
+    for i in range(hc.n) :
+        tableau.append([])
+        for j in range(hc.m) :
+            if (i, j) == (x, y):  # rajout d'Hitman ( vue de haut )
+                tableau[i].append("O")
+            elif hc.has_knowledge(i, j) : # Si on a des connaissances
+                tableau[i].append(hc.get_knowledge((i, j)))
+            else :
+                tableau[i].append("X")
+
+
+
+    tableau_resultat = ajouter_zeros_autour(transpose_tableau(tableau)) # tableau bien mis ( (0,m) = en haut a gauche , (n,m) = en haut a droite )
+    tab_finale = []
+    x_1 = 0
+    y_1 = 0
+
+    for i in range(len(tableau_resultat)):
+        tab_finale.append([])
+        for j in range(len(tableau_resultat[i])):
+            if tableau_resultat[i][j] == "O" :
+                tab_finale[i].append("O")
+                x_1 = i
+                y_1 = j
+            elif tableau_resultat[i][j] == "X" :
+                tab_finale[i].append("X")
+            else :
+                tab_finale[i].append(" ")
+
+    if dico["orientation"] == HC.S:
+        tab_finale[x_1+1][y_1] = "v"
+    elif dico["orientation"] == HC.N:
+        tab_finale[x_1-1][y_1] = "^"
+    elif dico["orientation"] == HC.E:
+        tab_finale[x_1][y_1+1] = ">"
+    elif dico["orientation"] == HC.W:
+        tab_finale[x_1][y_1-1] = "<"
+
+
+    for li in range(len(tableau_resultat)) :
+        for col in range(len(tableau_resultat[li])) :
+            if tableau_resultat[li][col] in [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W] :
+                nv_val = "G"
+                if tableau_resultat[li][col] == HC.GUARD_S: # Sud
+                    tab_finale[li][col] = "G"
+                    tab_finale[li+1][col] = "v"
+                elif tableau_resultat[li][col] == HC.GUARD_N:
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li-1][col] = "^"
+                elif tableau_resultat[li][col] == HC.GUARD_E: # est
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li][col+1] = ">"
+                elif tableau_resultat[li][col] == HC.GUARD_W : # Ouest
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li][col-1] = "<"
+            elif tableau_resultat[li][col] in [HC.CIVIL_N,HC.CIVIL_E,HC.CIVIL_S,HC.CIVIL_W] :
+                nv_val = "C"
+                if tableau_resultat[li][col] == HC.CIVIL_S:
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li + 1][col] = "v"
+                elif tableau_resultat[li][col] == HC.CIVIL_N:
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li - 1][col] = "^"
+                elif tableau_resultat[li][col] == HC.CIVIL_E:
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li][col + 1] = ">"
+                elif tableau_resultat[li][col] == HC.CIVIL_W:
+                    tab_finale[li][col] = nv_val
+                    tab_finale[li][col - 1] = "<"
+            elif tableau_resultat[li][col] == HC.WALL : # Construction d'un mur visuel
+                if col+2 < len(tableau_resultat[li]) :
+                    if tab_finale[li][col+2] != "|" :  ## Est
+                        tab_finale[li][col+1] = "|"
+                        tab_finale[li + 1][col + 1] = "|"
+                        tab_finale[li - 1][col + 1] = "|"
+                    elif tab_finale[li][col+2] == "|" :
+                        tab_finale[li - 1][col + 2] = "_"
+                        tab_finale[li][col + 2] = " "
+                        tab_finale[li + 1][col + 2] = "_"
+
+                if col-2 >=0 :
+                    if tab_finale[li][col-2] != "|" :  ## Ouest
+                        tab_finale[li - 1][col - 1] = "|"
+                        tab_finale[li][col-1] = "|"
+                        tab_finale[li + 1][col - 1] = "|"
+                    elif tab_finale[li][col-2] == "|" :
+                        tab_finale[li - 1][col - 2] = "_"
+                        tab_finale[li][col - 2] = " "
+                        tab_finale[li + 1][col - 2] = "_"
+                if li-2 >=0 :
+                    if tab_finale[li-2][col] != "_" :  ## Nord
+                        tab_finale[li - 1][col-1] = "_"
+                        tab_finale[li - 1][col] = "_"
+                        tab_finale[li - 1][col+1] = "_"
+                    elif tab_finale[li-2][col] == "_" :
+                        tab_finale[li - 2][col - 1] = "|"
+                        tab_finale[li - 2][col] = " "
+                        tab_finale[li - 2][col + 1] = "|"
+
+                if li+2<len(tableau_resultat) :
+                    if tab_finale[li + 2][col] != "_" :  ## Sud
+                        tab_finale[li + 1][col - 1] = "_"
+                        tab_finale[li + 1][col] = "_"
+                        tab_finale[li + 1][col + 1] = "_"
+                    elif tab_finale[li + 2][col] == "_" :
+                        tab_finale[li + 2][col - 1] = "|"
+                        tab_finale[li + 2][col] = " "
+                        tab_finale[li + 2][col + 1] = "|"
+
+            elif tableau_resultat[li][col] == HC.SUIT :
+                tab_finale[li][col] = "S"
+            elif tableau_resultat[li][col] == HC.TARGET:
+                tab_finale[li][col] = "T"
+            elif tableau_resultat[li][col] == HC.PIANO_WIRE:
+                tab_finale[li][col] = "P"
+            elif tableau_resultat[li][col] == HC.EMPTY:
+                tab_finale[li][col] = " "
+
+
+
+
+    # Affichage du tableau finale
+    for ligne in tab_finale:
+        for elt in ligne:
+            print(elt, end="   ")
+        print()
+
+
+
+
 
 
