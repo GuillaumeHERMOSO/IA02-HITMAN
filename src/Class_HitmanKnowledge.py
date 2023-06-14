@@ -106,7 +106,7 @@ class HitmanKnowledge:
     def ajout_voir_knowledge(self, status: Dict):
         for pos,valeur in status["vision"] :
             self.add_knowledge(pos,valeur)
-        if status["is_in_guard_range"]:
+        """if status["is_in_guard_range"]:
             # on est vu en position pos 
             print(f"\n\n\non est vu en position {status['position']} on mets des gardes potentiel")
             pos = status["position"]
@@ -139,7 +139,7 @@ class HitmanKnowledge:
                 self.add_knowledge((pos[0]-1,pos[1]),HC.E)
             if (pos[0]-2 >= 0):
                 self.add_knowledge((pos[0]-2,pos[1]),HC.E)
-
+"""
 
         pass
 

@@ -68,7 +68,19 @@ def nbr_inconu_coller(pos : State, know:HitmanKnowledge)->int:
             res +=1
     return res
     
-
+def nbr_obstacle(a:State, b:State, know:HitmanKnowledge) -> int:
+    """Compte le nombre d'obstacle entre a et b (garde, ou mur)"""
+    res = 0
+    if a[0] == b[0]:
+        for i in range(min(a[1],b[1]), max(a[1],b[1])):
+            if know.has_knowledge(a[0],i) and know.knowledge[(a[0],i)] in [HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.WALL]:
+                res += 1
+    elif a[1] == b[1]:
+        for i in range(min(a[0],b[0]), max(a[0],b[0])):
+            if know.has_knowledge(i,a[1]) and know.knowledge[(i,a[1])] in [HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.WALL]:
+                res += 1
+    #print(f"il y a {res} obstacle entre {a} et {b}")
+    return res
 
 def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know :HitmanKnowledge) -> List[Tuple[int,int]]:
     """ Retourne la liste des cases inconnu les plus proche de hitman trier par le calcul de la distance de manhattan et le nombre de mur entre hitman et la case"""
@@ -80,10 +92,21 @@ def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know
         for j in range(m):
             if (i,j) not in know.knowledge or  know.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
                 case.append((i,j))
-
     #TODO trouver un meuilleur heuristique pour trier
     # case.sort(key=lambda k: (distanceManhattan(k,(x,y)) - 5*nbr_mur_coller(k,walls) - 2*nbr_inconu_coller(k,know)))
-    case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu) ))
+    #case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu)))
+
+    # nbr de case vu dans case_connu qui peut voir la case : for k in (case_connu_qui_peut_voir_une_case(a, know)[0] : if is_case_vu(k,case_vu ):nbr += 1
+    # en une ligne pour le mettre key = lambda :
+    dico={}
+    for a in case:
+        dico[a] = 0
+        for k in case_connu_qui_peut_voir_une_case(a, m, n, know.get_all_knowledge())[0]:
+            if is_case_vu(k,case_vu):
+                dico[a] += 1
+    #case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu) + dico[k]))
+    case.sort(key=lambda k: (distanceManhattan(k,(x,y)) ))#+ 5*is_case_vu(k, case_vu) + nbr_obstacle(k, (x,y), know)))
+
     return case
 
 def get_action(pos1 :Tuple[int,int], pos2 :Tuple[int,int], orientation : HC, know :HitmanKnowledge, hr:HitmanReferee) -> Tuple[List[Callable[[],None]],HC]:

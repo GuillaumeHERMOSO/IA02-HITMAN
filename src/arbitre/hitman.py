@@ -79,7 +79,7 @@ class HC(Enum):
 
 
 # Provisoire...
-world_example1 = [
+world_example = [
     [HC.GUARD_S, HC.EMPTY, HC.EMPTY, HC.EMPTY, HC.EMPTY, HC.EMPTY, HC.EMPTY],
     [HC.EMPTY, HC.EMPTY, HC.WALL, HC.WALL, HC.EMPTY, HC.WALL, HC.EMPTY],
     [HC.EMPTY, HC.EMPTY, HC.WALL, HC.EMPTY, HC.EMPTY, HC.EMPTY, HC.GUARD_W],
