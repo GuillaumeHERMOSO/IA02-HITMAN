@@ -339,9 +339,8 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
 
     # Affichage du tableau finale
     for ligne in tab_finale:
-        print()
         for elt in ligne:
-            print(elt, end="   ")
+            print(elt, end="  ")
         print()
 
 

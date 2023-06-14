@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="udpate de Class_HitmanKnowledge.py">
       <change beforePath="$PROJECT_DIR$/src/Class_HitmanKnowledge.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Class_HitmanKnowledge.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686552698997</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="udpate de Class_HitmanKnowledge.py">
+      <created>1686698160346</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1686698160346</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,10 +170,11 @@
     <MESSAGE value="Ajout de la vision des gardes" />
     <MESSAGE value="UPDATE hitman.py" />
     <MESSAGE value="Rajout de conversion liste-&gt;set" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rajout de conversion liste-&gt;set" />
+    <MESSAGE value="udpate de Class_HitmanKnowledge.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="udpate de Class_HitmanKnowledge.py" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/test2_cnf$main.coverage" NAME="main Coverage Results" MODIFIED="1686698068121" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/test2_cnf$main.coverage" NAME="main Coverage Results" MODIFIED="1686698385043" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/IA02_HITMAN$verite_sur_le_monde.coverage" NAME="verite_sur_le_monde Coverage Results" MODIFIED="1684133559208" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
