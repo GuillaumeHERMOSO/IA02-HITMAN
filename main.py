@@ -214,6 +214,7 @@ def main5():
     
     input("Appuyer sur une touche pour continuer")
     status = debut_map(hr,con)
+    os.system('cls' if os.name == 'nt' else 'clear')
     afficher(con,hr)
     print(status["position"],status["orientation"], status["penalties"])
     s0 = status["position"]
@@ -256,6 +257,10 @@ def main5():
         for a in actions:
             status = a()
             con.ajout_voir_knowledge(status)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            afficher(con, hr)
+            sleep(0.2)
+        os.system('cls' if os.name == 'nt' else 'clear')
         afficher(con, hr)
         print(status["position"],status["orientation"], status["penalties"])
 
@@ -269,6 +274,7 @@ def main5():
         
         con.affichage_vison()
         print("\n _____________________________________________________________________________________________\n")
+        os.system('cls' if os.name == 'nt' else 'clear')
         afficher(con, hr)
         print(status["position"],status["orientation"], status["penalties"])
         print("fin du tour\n\n\n\n")
