@@ -201,15 +201,18 @@ def transpose_tableau(tableau):
 
 def ajouter_zeros_autour(tableau_original):
     n = len(tableau_original)
-    tableau_resultat = [[0] * (3 * n) for _ in range(3 * n)]
+    i = 0
+    m = len(tableau_original[i])
+    tableau_resultat = [[0] * (3 * m) for _ in range(3 * n)]
 
     for i in range(n):
-        for j in range(n):
+        for j in range(m):
             x = 3 * i + 1
             y = 3 * j + 1
             tableau_resultat[x][y] = tableau_original[i][j]
 
     return tableau_resultat
+
 def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
     tableau = []
 
@@ -225,9 +228,7 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                 tableau[i].append(hc.get_knowledge((i, j)))
             else :
                 tableau[i].append("X")
-
-
-
+        print(tableau[i])
     tableau_resultat = ajouter_zeros_autour(transpose_tableau(tableau)) # tableau bien mis ( (0,m) = en haut a gauche , (n,m) = en haut a droite )
     tab_finale = []
     x_1 = 0
