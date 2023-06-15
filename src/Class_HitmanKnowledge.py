@@ -287,44 +287,72 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                     tab_finale[li][col] = nv_val
                     tab_finale[li][col - 1] = "<"
             elif tableau_resultat[li][col] == HC.WALL : # Construction d'un mur visuel
+
                 if col+2 < len(tableau_resultat[li]) :
-                    if tab_finale[li][col+2] != "|" :  ## Est
-                        tab_finale[li][col+1] = "|"
-                        tab_finale[li + 1][col + 1] = "|"
-                        tab_finale[li - 1][col + 1] = "|"
-                    elif tab_finale[li][col+2] == "|" :
-                        tab_finale[li - 1][col + 2] = "_"
+                    if tab_finale[li][col+2] != '┃' :  ## Est
+                        tab_finale[li][col+1] = '┃'
+                        tab_finale[li + 1][col + 1] = '┃'
+                        tab_finale[li - 1][col + 1] = '┃'
+                    elif tab_finale[li][col+2] == '┃' :
+                        tab_finale[li - 1][col + 2] = '━'
                         tab_finale[li][col + 2] = " "
-                        tab_finale[li + 1][col + 2] = "_"
+                        tab_finale[li + 1][col + 2] = '━'
+                        if li+3<len(tableau_resultat) :
+                            if tab_finale[li+3][col+2] == '┃':
+                                tab_finale[li + 1 ][col + 2] = "┓"
+                        if li - 3 > 0:
+                            if tab_finale[li - 3][col+2] == '┃' :
+                                tab_finale[li - 1][col + 2] = "┛"
+
 
                 if col-2 >=0 :
-                    if tab_finale[li][col-2] != "|" :  ## Ouest
-                        tab_finale[li - 1][col - 1] = "|"
-                        tab_finale[li][col-1] = "|"
-                        tab_finale[li + 1][col - 1] = "|"
-                    elif tab_finale[li][col-2] == "|" :
-                        tab_finale[li - 1][col - 2] = "_"
+                    if tab_finale[li][col-2] != '┃' :  ## Ouest
+                        tab_finale[li - 1][col - 1] = '┃'
+                        tab_finale[li][col-1] = '┃'
+                        tab_finale[li + 1][col - 1] = '┃'
+                    elif tab_finale[li][col-2] == '┃' :
+                        tab_finale[li - 1][col - 2] = '━'
                         tab_finale[li][col - 2] = " "
-                        tab_finale[li + 1][col - 2] = "_"
+                        tab_finale[li + 1][col - 2] = '━'
+                        if li+3<len(tableau_resultat) :
+                            if tab_finale[li+3][col-2] == '┃':
+                                tab_finale[li + 1 ][col - 2] = '┏'
+                        if li - 3 > 0:
+                            if tab_finale[li - 3][col-2] == '┃' :
+                                tab_finale[li - 1][col - 2] = "┗"
+
+
                 if li-2 >=0 :
-                    if tab_finale[li-2][col] != "_" :  ## Nord
-                        tab_finale[li - 1][col-1] = "_"
-                        tab_finale[li - 1][col] = "_"
-                        tab_finale[li - 1][col+1] = "_"
-                    elif tab_finale[li-2][col] == "_" :
-                        tab_finale[li - 2][col - 1] = "|"
+                    if tab_finale[li-2][col] != '━' :  ## Nord
+                        tab_finale[li - 1][col-1] = '━'
+                        tab_finale[li - 1][col] = '━'
+                        tab_finale[li - 1][col+1] = '━'
+                    elif tab_finale[li-2][col] == '━' :
+                        tab_finale[li - 2][col - 1] = '┃'
                         tab_finale[li - 2][col] = " "
-                        tab_finale[li - 2][col + 1] = "|"
+                        tab_finale[li - 2][col + 1] = '┃'
+                        if col - 3 > 0:
+                            if tab_finale[li - 2][col - 3] == '━':
+                                tab_finale[li - 2][col - 1] = "┓"
+                        if col + 3 < 0:
+                            if tab_finale[li - 2][col + 3] == '━':
+                                tab_finale[li - 2][col + 1] = '┏'
 
                 if li+2<len(tableau_resultat) :
-                    if tab_finale[li + 2][col] != "_" :  ## Sud
-                        tab_finale[li + 1][col - 1] = "_"
-                        tab_finale[li + 1][col] = "_"
-                        tab_finale[li + 1][col + 1] = "_"
-                    elif tab_finale[li + 2][col] == "_" :
-                        tab_finale[li + 2][col - 1] = "|"
+                    if tab_finale[li + 2][col] != '━' :  ## Sud
+                        tab_finale[li + 1][col - 1] = '━'
+                        tab_finale[li + 1][col] = '━'
+                        tab_finale[li + 1][col + 1] = '━'
+                    elif tab_finale[li + 2][col] == '━' :
+                        tab_finale[li + 2][col - 1] = '┃'
                         tab_finale[li + 2][col] = " "
-                        tab_finale[li + 2][col + 1] = "|"
+                        tab_finale[li + 2][col + 1] = '┃'
+                        if col - 3 > 0:
+                            if tab_finale[li + 2][col - 3] == '━':
+                                tab_finale[li + 2][col - 1] = "┛"
+                        if col + 3 < 0:
+                            if tab_finale[li + 2][col + 3] == '━':
+                                tab_finale[li + 2][col + 1] = "┗"
 
             elif tableau_resultat[li][col] == HC.SUIT :
                 tab_finale[li][col] = "S"
@@ -340,10 +368,10 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
 
     # Affichage du tableau finale
     for ligne in tab_finale:
+
         for elt in ligne:
             print(elt, end="  ")
         print()
-
 
 
 
