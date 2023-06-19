@@ -7,7 +7,7 @@ from src.clause_verite_sur_le_monde import *
 from src.arbitre.hitman import HC
 from src.mouvement_phase1 import *
 from src.a_etoile import *
-
+from src.test_phase2 import *
 
 def main():
     
@@ -290,7 +290,23 @@ def main5():
 
     pass
 
+def main6():
+    hr = HitmanReferee()
+    status = hr.start_phase1()
+    n = status["n"]
+    m = status["m"]
+    con = HitmanKnowledge(m=m, n=n)
+    status = hr.send_content(con.get_all_knowledge())
+    pprint(status)
+    print(con)
+    input()
+    status = hr.end_phase1()
+    pprint(status)
 
+    con.knowledge = status[3]
+    print(con)
+    input()
+    os.system('cls' if os.name == 'nt' else 'clear')
+    test_phase2(hr,con,[])
 if __name__ == "__main__":
-    main5()
-    #main2()
+    main6()
