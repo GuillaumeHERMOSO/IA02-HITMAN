@@ -9,7 +9,7 @@ from src.mouvement_phase1 import *
 from src.a_etoile import *
 from src.test_phase2 import *
 from src.sat import *
-from src.clause_dynamique import *
+
 def main():
     
     """
@@ -292,12 +292,16 @@ def main5():
     pass
 
 def main6():
+
     hr = HitmanReferee()
     status = hr.start_phase1()
     n = status["n"]
     m = status["m"]
     con = HitmanKnowledge(m=m, n=n)
     status = hr.send_content(con.get_all_knowledge())
+
+
+
     pprint(status)
     print(con)
     input()
@@ -305,9 +309,33 @@ def main6():
     pprint(status)
 
     con.knowledge = status[3]
+    
+    list_var = creer_list_var(m,n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
+
+    print(knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num))
+    return
     print(con)
     input()
     os.system('cls' if os.name == 'nt' else 'clear')
     test_phase2(hr,con,[])
+
+
+def main_sat():
+    hr = HitmanReferee()
+    status = hr.start_phase1()
+    n = status["n"]
+    m = status["m"]
+    con = HitmanKnowledge(m=m, n=n)
+    status = hr.send_content(con.get_all_knowledge())
+    status = hr.end_phase1()
+    con.knowledge = status[3]
+    
+
+    list_var = creer_list_var(m,n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
+
+    print(knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num))
+    return
 if __name__ == "__main__":
-    main6()
+    main_sat()
