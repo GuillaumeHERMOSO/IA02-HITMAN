@@ -297,11 +297,11 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                         tab_finale[li - 1][col + 2] = '━'
                         tab_finale[li][col + 2] = " "
                         tab_finale[li + 1][col + 2] = '━'
-                        if li+3<len(tableau_resultat) :
-                            if tab_finale[li+3][col+2] == '┃':
+                        if li+2<len(tableau_resultat) :
+                            if tab_finale[li+2][col+2] == '┃':
                                 tab_finale[li + 1 ][col + 2] = "┓"
-                        if li - 3 > 0:
-                            if tab_finale[li - 3][col+2] == '┃' :
+                        if li - 2 >= 0:
+                            if tab_finale[li - 2][col+2] == '┃' :
                                 tab_finale[li - 1][col + 2] = "┛"
 
 
@@ -314,11 +314,11 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                         tab_finale[li - 1][col - 2] = '━'
                         tab_finale[li][col - 2] = " "
                         tab_finale[li + 1][col - 2] = '━'
-                        if li+3<len(tableau_resultat) :
-                            if tab_finale[li+3][col-2] == '┃':
+                        if li+2<len(tableau_resultat) :
+                            if tab_finale[li+2][col-2] == '┃':
                                 tab_finale[li + 1 ][col - 2] = '┏'
-                        if li - 3 > 0:
-                            if tab_finale[li - 3][col-2] == '┃' :
+                        if li - 2 >= 0:
+                            if tab_finale[li - 2][col-2] == '┃' :
                                 tab_finale[li - 1][col - 2] = "┗"
 
 
@@ -331,11 +331,11 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                         tab_finale[li - 2][col - 1] = '┃'
                         tab_finale[li - 2][col] = " "
                         tab_finale[li - 2][col + 1] = '┃'
-                        if col - 3 > 0:
-                            if tab_finale[li - 2][col - 3] == '━':
+                        if col - 2 >= 0:
+                            if tab_finale[li - 2][col - 2] == '━':
                                 tab_finale[li - 2][col - 1] = "┓"
-                        if col + 3 < 0:
-                            if tab_finale[li - 2][col + 3] == '━':
+                        if col + 2 < len(tableau_resultat[li]):
+                            if tab_finale[li - 2][col + 2] == '━':
                                 tab_finale[li - 2][col + 1] = '┏'
 
                 if li+2<len(tableau_resultat) :
@@ -347,11 +347,11 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                         tab_finale[li + 2][col - 1] = '┃'
                         tab_finale[li + 2][col] = " "
                         tab_finale[li + 2][col + 1] = '┃'
-                        if col - 3 > 0:
-                            if tab_finale[li + 2][col - 3] == '━':
+                        if col - 2 >= 0:
+                            if tab_finale[li + 2][col - 2] == '━':
                                 tab_finale[li + 2][col - 1] = "┛"
-                        if col + 3 < 0:
-                            if tab_finale[li + 2][col + 3] == '━':
+                        if col + 2 <len(tableau_resultat[li]):
+                            if tab_finale[li + 2][col + 2] == '━':
                                 tab_finale[li + 2][col + 1] = "┗"
 
             elif tableau_resultat[li][col] == HC.SUIT :

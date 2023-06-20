@@ -8,7 +8,8 @@ from src.arbitre.hitman import HC
 from src.mouvement_phase1 import *
 from src.a_etoile import *
 from src.test_phase2 import *
-
+from src.sat import *
+from src.clause_dynamique import *
 def main():
     
     """
