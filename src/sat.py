@@ -115,4 +115,30 @@ def test_deduction(filename: str, var_tester: int):
     with open(filename, "w", encoding="utf-8") as destination:
         destination.write(temp)                      # Réecriture du fichier
 
+
+
+
+def deduction(Clauses : ClauseBase, nb_vars: int, var_tester: int):
+    # on creer un fichier de clauses
+    temp = Clauses +[[-var_tester]]
+    write_dimacs_file2(temp, nb_vars, "sat.cnf")
+
+
+    #on test la deduction
+    res = exec_gophersat("test2.cnf")
+    print(res)
+    if res[0] == True:
+        print(f"on deduit {var_tester}")
+        return  Clauses +[[var_tester]]
+    
+    return Clauses
+
+def boucle_deduction(Clauses : ClauseBase, nb_vars: int, list_var: List[int]):
+    temp = Clauses
+    print(temp)
+    for var in list_var:
+        temp = deduction(temp, nb_vars, var)
+    return temp
+
+
     

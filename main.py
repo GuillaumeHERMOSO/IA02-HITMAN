@@ -9,6 +9,7 @@ from src.mouvement_phase1 import *
 from src.a_etoile import *
 from src.test_phase2 import *
 from src.sat import *
+from src.clause_dynamique import *
 
 def main():
     
@@ -100,7 +101,6 @@ def main():
 
 
     pass
-
 
 def main2() :
     hr = HitmanReferee()
@@ -335,7 +335,20 @@ def main_sat():
     list_var = creer_list_var(m,n)
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_var)
 
-    print(knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num))
+    Nos_Clauses = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+    r = ecouter(Nos_Clauses,hr,dict_var_to_num)
+    for e in r:
+        print(e)
+        Nos_Clauses.add(e)
+    print(Nos_Clauses)
     return
+
+def test_dedu():
+    test_clauses = [[1,2,3],[4,5,6],[7,8,9]]
+    test_nb_vars = 9
+    test_list_var = [1,2,3,4,5,6,7,8,9]
+
+    res = boucle_deduction(test_clauses, test_nb_vars, test_list_var)
+    print(res)
 if __name__ == "__main__":
-    main_sat()
+    test_dedu()
