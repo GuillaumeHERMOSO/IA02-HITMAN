@@ -5,7 +5,7 @@ Grid = List[List[int]]
 PropositionnalVariable = int
 Literal = int
 Clause = List[Literal]
-ClauseBase = set[Clause]
+ClauseBase = List[Clause]
 Model = List[Literal]
 
 from src.arbitre.hitman import *
@@ -172,14 +172,13 @@ class HitmanKnowledge:
 
 
     
-
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
-    r = set()
+    r = []
     for i,v in Dico_know.items():
         #print(v)
         if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W]:
             #print(f"{i[0]}{i[1]}_P")
-            r.add(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
+            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
     return r
 
 

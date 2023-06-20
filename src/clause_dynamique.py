@@ -15,12 +15,13 @@ Grid = List[List[int]]
 PropositionnalVariable = int
 Literal = int
 Clause = List[Literal]
-ClauseBase = set[Clause]
+ClauseBase = List[Clause]
 Model = List[Literal]
 
-def ecouter(seta : set, dico : HitmanReferee.start_phase1(),dict_var_to_num) : # ecouter avec l'arbitre
+def ecouter(hr : HitmanReferee,dict_var_to_num) : # ecouter avec l'arbitre
 
     # On récupère les valeurs du dico de l'arbitre :
+    dico = hr.start_phase1()
     k = dico["hear"]
     n = dico["n"]
     m = dico["m"]
@@ -49,9 +50,10 @@ def ecouter(seta : set, dico : HitmanReferee.start_phase1(),dict_var_to_num) : #
     for elt in variables :
         r.append(dict_var_to_num[elt]) # Transformation en valeurs utilisable dans SAT
     if k >= 5:
-        return add_list_to_set(seta,at_least_k(5,r)) # Si on entend au moins 5 personnes
+        return at_least_k(5,r) # Si on entend au moins 5 personnes
 
-    return add_list_to_set(seta,exactly_k(k,r))  # Si on entend moins de 5 personnes
+    return exactly_k(k,r)  # Si on entend moins de 5 personnes
+
 
 def add_voir(seta : set,dict_var_to_num, dico : Class_HitmanKnowledge.HitmanKnowledge) : # Voir pour le sat
     variables = []

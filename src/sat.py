@@ -18,8 +18,8 @@ def creer_dictionnaire_cases_par_list(list_variable : list) -> dict:
     # Création du dictionnaire une variable = un chiffre:
     compteur = 1
     dict_cases = {}
-    for i in list_variable:
-        dict_cases[i] = compteur
+    for var in list_variable:  # var = "ij_P"
+        dict_cases[var] = compteur
         compteur += 1
     return dict_cases
 
@@ -141,4 +141,17 @@ def boucle_deduction(Clauses : ClauseBase, nb_vars: int, list_var: List[int]):
     return temp
 
 
-    
+def supprimer_doublons(liste : ClauseBase):
+    result = []
+    seen = set()
+
+    for sous_liste in liste:
+        sous_liste_unique = []
+        for element in sous_liste:
+            if element not in seen:
+                sous_liste_unique.append(element)
+                seen.add(element)
+        if sous_liste_unique != [] :
+            result.append(sous_liste_unique)
+
+    return result
