@@ -9,7 +9,7 @@ from src.contraintes import *
 from src.arbitre.hitman import *
 from src.sat import *
 
-import Class_HitmanKnowledge
+from src.Class_HitmanKnowledge import *
 
 Grid = List[List[int]]
 PropositionnalVariable = int
@@ -55,12 +55,6 @@ def ecouter(hr : HitmanReferee,dict_var_to_num) : # ecouter avec l'arbitre
     return exactly_k(k,r)  # Si on entend moins de 5 personnes
 
 
-def add_voir(seta : set,dict_var_to_num, dico : Class_HitmanKnowledge.HitmanKnowledge) : # Voir pour le sat
-    variables = []
-    for pos,valeur in dico.affichage_vison() :
-        x,y = pos
-        variables.append(dict_var_to_num[f"{x}{y}_P"])  # Transformation en valeurs utilisable dans SAT
-    return add_list_to_set(seta,variables)
 
 def orientation_garde(garde):
     if garde == HC.GUARD_N:

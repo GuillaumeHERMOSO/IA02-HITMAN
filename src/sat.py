@@ -6,7 +6,7 @@ Literal = int
 Clause = List[Literal]
 ClauseBase = List[Clause]
 Model = List[Literal]
-
+from src.Class_HitmanKnowledge import *
 def creer_list_var(m: int, n: int) -> list:
     list_cases = []
     for j in range(0,m):
@@ -118,30 +118,31 @@ def test_deduction(filename: str, var_tester: int):
 
 
 
-def deduction(Clauses : ClauseBase, nb_vars: int, var_tester: int):
+def deduction(dict_var_to_num : dict,hc : HitmanKnowledge,Clauses : ClauseBase, nb_vars: int, var_tester: int):
     # on creer un fichier de clauses
     temp = Clauses +[[-var_tester]]
     write_dimacs_file2(temp, nb_vars, "sat.cnf")
-
-
     #on test la deduction
     res = exec_gophersat("sat.cnf")
-    print(res)
     if res[0] == False:
         print(f"on deduit {var_tester}")
+        pos = trouver_cle(dict_var_to_num,var_tester) # On récupère les coordonnées de l'individu déduit
+        hc.add_knowledge(pos,HC.N)   # Ajout d'un individu déduit
         return  Clauses +[[var_tester]]
     
     return Clauses
 
-def boucle_deduction(Clauses : ClauseBase, nb_vars: int, list_var: List[int]):
-    temp = Clauses
-    print(temp)
+def boucle_deduction(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : ClauseBase):
+    temp = clauses
+    list_var = hc.get_no_knowledge_clause(dict_var_to_num)
+    if list_var == [] : return 0 # rien à deduire, tout est connu
+    nb_vars = len(list_var)
     for var in list_var:
-        temp = deduction(temp, nb_vars, var)
+        temp = deduction(dict_var_to_num,hc,temp, nb_vars, var)
     return temp
 
 
-def supprimer_doublons(liste : ClauseBase):
+def supprimer_doublons(liste : ClauseBase) -> ClauseBase:
     result = []
     seen = set()
 
@@ -155,3 +156,9 @@ def supprimer_doublons(liste : ClauseBase):
             result.append(sous_liste_unique)
 
     return result
+def trouver_cle(dictionnaire, valeur):
+    for cle, val in dictionnaire.items():
+        if val == valeur:
+            position  = cle[0],cle[1]
+            return position
+    return None

@@ -210,15 +210,7 @@ def main5():
     n = status["n"]
     m = status["m"]
     con = HitmanKnowledge(m=m, n=n)
-    clauses = ClauseBase
-    list_cases  = creer_list_var(m,n)
-    dict_var_to_num = creer_dictionnaire_cases_par_list(list_cases)
     con.ajout_voir_knowledge(status)
-    clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(),dict_var_to_num)
-
-    clauses_ecoute = ecouter(hr,dict_var_to_num)
-    clauses += clauses_ecoute
-    clauses += clauses_con
 
 
     afficher(con,hr)
@@ -360,10 +352,24 @@ def main5_v2():
     status = hr.start_phase1()
     n = status["n"]
     m = status["m"]
+
     con = HitmanKnowledge(m=m, n=n)
     con.ajout_voir_knowledge(status)
-    clauses_ecoutes = ecouter(hr,)
 
+    clauses = [[]]
+
+    list_cases  = creer_list_var(m,n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_cases)
+
+    clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(),dict_var_to_num)
+    clauses_ecoute = ecouter(hr,dict_var_to_num)
+
+    clauses += clauses_ecoute
+    clauses += clauses_con
+
+    clauses = supprimer_doublons(clauses)
+
+    clauses = boucle_deduction(dict_var_to_num,con,clauses)
 
     afficher(con, hr)
 
@@ -413,6 +419,15 @@ def main5_v2():
         for a in actions:
             status = a()
             con.ajout_voir_knowledge(status)
+            clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+            clauses_ecoute = ecouter(hr, dict_var_to_num)
+
+            clauses += clauses_ecoute
+            clauses += clauses_con
+
+            clauses = supprimer_doublons(clauses)
+
+            clauses = boucle_deduction(dict_var_to_num, con, clauses)
             os.system('cls' if os.name == 'nt' else 'clear')
             afficher(con, hr)
             sleep(0.2)
@@ -428,6 +443,15 @@ def main5_v2():
             print(a.__name__)
             status = a()
             con.ajout_voir_knowledge(status)
+            clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+            clauses_ecoute = ecouter(hr, dict_var_to_num)
+
+            clauses += clauses_ecoute
+            clauses += clauses_con
+
+            clauses = supprimer_doublons(clauses)
+
+            clauses = boucle_deduction(dict_var_to_num, con, clauses)
 
         con.affichage_vison()
         print("\n _____________________________________________________________________________________________\n")
@@ -443,17 +467,6 @@ def main5_v2():
     print(status[1])
 
     pass
-def test_dedu():
-    test_clauses = [[1,2,3],[4,5,6],[7,8,9]]
-    test_nb_vars = 9
-    test_list_var = [1,2,3]
 
-    #on deduit rien
-    res = boucle_deduction(test_clauses, test_nb_vars, test_list_var)
-    print(res)
-
-    test_clauses = [[1,2],[1]]
-    res = boucle_deduction(test_clauses, test_nb_vars, test_list_var)
-    print(res)
 if __name__ == "__main__":
-    test_dedu()
+    main5_v2()

@@ -31,7 +31,21 @@ class HitmanKnowledge:
         elif garde in [HC.GUARD_W, HC.W]:
             offset = -1, 0
         return offset
-    
+    def quadri_direction(self,position): # Ajoute dans la matrice de vision les 4 directions pour une personne deduite non vu ( HC.N )
+        direction = [HC.N,HC.E,HC.S,HC.W]
+        vision = []
+        for direc in direction :
+            offset_x, offset_y = self.orientation_garde(direc)
+            x, y = position
+            for _ in range(0, 2):
+                pos = x + offset_x, y + offset_y
+                x, y = pos
+                if x >= self.n or y >= self.m or x < 0 or y < 0:
+                    break
+                vision.append(pos)
+                if (self.has_knowledge(x, y) and self.knowledge[pos] != HC.EMPTY):
+                    break
+        return vision
     def maj_vision_garde (self) :
         """ Mettre a jour la matrice de vision des gardes """
         #TODO voir si on peut faire autrement pour ne pas tt init
@@ -39,7 +53,7 @@ class HitmanKnowledge:
         self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
         for position in self.knowledge:
             vision = []
-            if self.knowledge[position] in  [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W, HC.N, HC.E, HC.S, HC.W]:
+            if self.knowledge[position] in  [HC.GUARD_N,HC.GUARD_E,HC.GUARD_S,HC.GUARD_W]:
                 offset_x, offset_y = self.orientation_garde(self.knowledge[position])
                 x,y = position
                 for _ in range(0, 2):
@@ -50,8 +64,14 @@ class HitmanKnowledge:
                     vision.append(pos)
                     if (self.has_knowledge(x,y) and self.knowledge[pos] != HC.EMPTY):
                         break
+            elif self.knowledge[position] == HC.N :
+                vision_quadri = self.quadri_direction(position)
+                if len(vision_quadri) > 0 :
+                    for elt in vision_quadri :
+                        vision.append(elt)
             for pos in vision:
                 self.matrice_vision[pos] += 1
+
         pass
 
     def add_knowledge(self, position: Tuple[int, int], content: HC):
@@ -70,6 +90,13 @@ class HitmanKnowledge:
     def get_all_knowledge(self) -> Dict[Tuple[int, int], HC]:
         return self.knowledge
  
+    def get_no_knowledge_clause(self,dict_var_to_num)-> List[int] :
+        variables_a_tester = []
+        for j in range(self.m):
+            for i in range(self.n):
+                if not self.has_knowledge(i, j):              # Si on a pas de connaissances, c'est une variable à tester
+                    variables_a_tester.append(dict_var_to_num[f"{i}{j}_P"])
+        return variables_a_tester
 
                 
 
