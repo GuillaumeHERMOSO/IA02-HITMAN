@@ -9,7 +9,6 @@ from src.mouvement_phase1 import *
 from src.a_etoile import *
 from src.test_phase2 import *
 from src.sat import *
-from src.clause_dynamique import *
 
 def main():
     
@@ -346,8 +345,13 @@ def main_sat():
 def test_dedu():
     test_clauses = [[1,2,3],[4,5,6],[7,8,9]]
     test_nb_vars = 9
-    test_list_var = [1,2,3,4,5,6,7,8,9]
+    test_list_var = [1,2,3]
 
+    #on deduit rien
+    res = boucle_deduction(test_clauses, test_nb_vars, test_list_var)
+    print(res)
+
+    test_clauses = [[1,2],[1]]
     res = boucle_deduction(test_clauses, test_nb_vars, test_list_var)
     print(res)
 if __name__ == "__main__":

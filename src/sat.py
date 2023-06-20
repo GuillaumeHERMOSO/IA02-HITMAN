@@ -125,9 +125,9 @@ def deduction(Clauses : ClauseBase, nb_vars: int, var_tester: int):
 
 
     #on test la deduction
-    res = exec_gophersat("test2.cnf")
+    res = exec_gophersat("sat.cnf")
     print(res)
-    if res[0] == True:
+    if res[0] == False:
         print(f"on deduit {var_tester}")
         return  Clauses +[[var_tester]]
     
