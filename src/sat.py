@@ -9,8 +9,8 @@ Model = List[Literal]
 
 def creer_list_var(m: int, n: int) -> list:
     list_cases = []
-    for i in range(0,m):
-        for j in range(0,n):
+    for j in range(0,m):
+        for i in range(0,n):
                 list_cases.append("%d%d_%s"%(i,j,"P"))
     return list_cases
 
