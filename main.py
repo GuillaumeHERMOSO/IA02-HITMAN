@@ -3,13 +3,14 @@ import random
 from typing import List, Tuple
 from src.arbitre.hitman import *
 from src.Class_HitmanKnowledge import *
-from src.clause_verite_sur_le_monde import *
 from src.arbitre.hitman import HC
 from src.mouvement_phase1 import *
 from src.a_etoile import *
 from src.phase2 import *
 from src.sat import *
 from src.phase1 import *
+from src.contraintes import *
+from src.clause_dynamique import *
 
 def main():
     
