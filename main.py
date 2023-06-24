@@ -294,9 +294,148 @@ def main5():
     pass
 
 
+def main5_sat():
+    # Debut de phase 1
+    hr = HitmanReferee()
+    status = hr.start_phase1()
+    n = status["n"]
+    m = status["m"]
+    con = HitmanKnowledge(m=m, n=n)
+    con.ajout_voir_knowledge(status)
+
+    clauses = [[]]
+
+    list_cases = creer_list_var(m, n)
+    dict_var_to_num = creer_dictionnaire_cases_par_list(list_cases)
+
+    clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+    clauses_ecoute = ecouter(hr, dict_var_to_num)
+
+    clauses += clauses_ecoute
+    clauses += clauses_con
+
+    #clauses = supprimer_doublons(clauses)
+
+    clauses = boucle_deduction(dict_var_to_num, con, clauses)
+    afficher(con, hr, status)
+
+
+
+
+
+
+
+    clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+    clauses_ecoute = ecouter(hr, dict_var_to_num)
+
+    clauses += clauses_ecoute
+    clauses += clauses_con
+
+    #clauses = supprimer_doublons(clauses)
+
+    clauses = boucle_deduction(dict_var_to_num, con, clauses)
+
+
+
+    input("Appuyer sur une touche pour continuer")
+    status = debut_map(hr, con)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    afficher(con, hr, status)
+    print(status["position"], status["orientation"], status["penalties"])
+    s0 = status["position"]
+    visited = [s0]
+
+    while (con.je_sais_pas_tt()):
+        # Tant que Hitman c'est pas tout
+        s0 = status["position"]
+        visited.append(s0)
+
+        # on regarde les cases inconnus les plus proches
+        liste = get_liste_case_inconnu_plus_proche_hitman(s0[0], s0[1], n, m, con)
+        test = []
+
+        while test == []:
+            # on prend la premiere case de la liste
+            goal = liste.pop(0)
+            print(f"on est en {status['position']} on veut voir {goal}")
+            # on regarde ou on peut aller pour voir la case
+            test, orientation_a_obtenir = case_connu_qui_peut_voir_une_case(goal, m, n, con.get_all_knowledge())
+            print(f" on va donc en : {test}")
+
+        s, d = astar_with_parent(s0, test, succ, con.get_all_knowledge(), m, n, con.get_liste_mur(),
+                                 con.get_liste_casevu(), visited)
+        oro = orientation_a_obtenir[s]
+
+        # con.add_knowledge(s,oro,HC.N)
+        print(f"s = {s}")
+        chemin = []
+        while s != s0:
+            chemin.append(s)
+            s = d[s]
+        chemin.append(s0)
+        chemin.reverse()
+
+        print(f"Le chemin est : {chemin}")
+        orientation = status["orientation"]
+        # on transforme le chemin en liste d'action qu'on execute
+        actions = chemin_to_action(chemin, orientation, con, hr)
+        print(f"on fait donc les actions : {actions}")
+        input("Appuyer sur une touche pour continuer")
+        for a in actions:
+            status = a()
+            con.ajout_voir_knowledge(status)
+            clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+            clauses_ecoute = ecouter(hr, dict_var_to_num)
+
+            clauses += clauses_ecoute
+            clauses += clauses_con
+
+            #clauses = supprimer_doublons(clauses)
+
+            clauses = boucle_deduction(dict_var_to_num, con, clauses)
+            os.system('cls' if os.name == 'nt' else 'clear')
+            afficher(con, hr, status)
+            sleep(0.2)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        afficher(con, hr, status)
+        print(status["position"], status["orientation"], status["penalties"])
+
+        # on est au bon endroit on tourne dans la direction nous permettant de voir la case inconnu
+        tourner_action = tourner(status["orientation"], oro, hr)
+        print(
+            f" on est en a la case {status['position']} avec l'orientation {status['orientation']} et on veut tourner en {oro}")
+        for a in tourner_action:
+            print(a.__name__)
+            status = a()
+            con.ajout_voir_knowledge(status)
+            clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+            clauses_ecoute = ecouter(hr, dict_var_to_num)
+
+            clauses += clauses_ecoute
+            clauses += clauses_con
+
+            #clauses = supprimer_doublons(clauses)
+
+            clauses = boucle_deduction(dict_var_to_num, con, clauses)
+
+        con.affichage_vison()
+        print("\n _____________________________________________________________________________________________\n")
+        os.system('cls' if os.name == 'nt' else 'clear')
+        afficher(con, hr, status)
+        print(status["position"], status["orientation"], status["penalties"])
+        print("fin du tour\n\n\n\n")
+        input("Appuyer sur une touche pour continuer")
+
+    # on a tout vu on envoie le contenu
+    print(hr.send_content(con.get_all_knowledge()))
+    status = hr.end_phase1()
+    print(status[1])
+
+    pass
 
 
 def main_sat():
+
     hr = HitmanReferee()
     status = hr.start_phase1()
     n = status["n"]
