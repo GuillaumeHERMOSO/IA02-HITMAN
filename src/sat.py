@@ -16,14 +16,15 @@ def creer_list_var(m: int, n: int) -> list:
                 list_cases.append("%d%d_%s"%(i,j,"P"))
     return list_cases
 
-def creer_dictionnaire_cases_par_list(list_variable : list) -> dict:
+def creer_dictionnaire_cases_par_list(list_variable : list) -> Tuple[dict,int]:
     # Création du dictionnaire une variable = un chiffre:
-    compteur = 1
+    compteur = 0
     dict_cases = {}
     for var in list_variable:  # var = "ij_P"
-        dict_cases[var] = compteur
         compteur += 1
-    return dict_cases
+        dict_cases[var] = compteur
+
+    return dict_cases, compteur
 
 def gen_var_lettre(m: int, n: int, dico_var_to_num: dict, lettre: str) -> list:
     list_var = []
@@ -126,29 +127,42 @@ def deduction(dict_var_to_num : dict,hc : HitmanKnowledge,Clauses : ClauseBase, 
     write_dimacs_file2(temp, nb_vars, "sat.cnf")
     #on test la deduction
     res = exec_gophersat("sat.cnf")
+    print("Deduction potentielle : ", end="")
+    print(trouver_cle(dict_var_to_num, var_tester), end=" ")
     if res[0] == False:
-        print(f"on deduit {var_tester}")
+        print(f"on deduit  : {trouver_cle(dict_var_to_num,var_tester)}")
         pos = trouver_cle(dict_var_to_num,var_tester) # On récupère les coordonnées de l'individu déduit
         hc.add_knowledge(pos,HC.N)   # Ajout d'un individu déduit
         return  Clauses +[[var_tester]]
-    
+    elif res[0] == True:
+        print(f"on n'a pas pu déduire :  {trouver_cle(dict_var_to_num,var_tester)}")
+
+
+
     return Clauses
 
-def boucle_deduction(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : ClauseBase) -> ClauseBase:
+def boucle_deduction(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : ClauseBase, nb : int) -> ClauseBase:
     temp = clauses
-    list_var = hc.get_no_knowledge_clause(dict_var_to_num)
-    nv_list_var = []
-    for elt in list_var :
-        for ligne in clauses :
-            if len(ligne) >  1 : # pas clause unitaire
-                if elt in ligne or -elt in ligne :
-                    nv_list_var.append(elt)
-    nv_list_var = list(set(nv_list_var))  # suppression des doublons
-    if nv_list_var == [] : return clauses # rien à deduire, tout est connu
-    nb_vars = len(nv_list_var)
-    for var in nv_list_var:
+    list_var = []
+    clauses_unitaires = []
+    clauses_1D = transformer_en_liste_simple(clauses)
+    if len(clauses_1D) < 60 :
+        print(clauses)
+        print("clauses 1D : ",clauses_1D)
+    for ligne in clauses:
+        if len(ligne) == 1:  # clause unitaire
+            clauses_unitaires.append(ligne[0])
+    for elt in clauses_1D :
+        if -elt not in clauses_unitaires and elt not in clauses_unitaires :
+            if elt not in list_var and elt>0:
+                list_var.append(elt)  # On ne teste que des variables non-unitaires et deja dans les clauses : les ecoutes !
+    if list_var == [] :
+        print("On ne peut rien deduire pour le moment")
+        return clauses # rien à deduire, tout est connu
+    nb_vars = nb
+    print("liste : ",list_var)
+    for var in list_var:
         temp = deduction(dict_var_to_num,hc,temp, nb_vars, var)
-        print(temp)
     return temp
 
 
@@ -165,3 +179,9 @@ def trouver_cle(dictionnaire, valeur):
             position  = cle[0],cle[1]
             return position
     return None
+
+def transformer_en_liste_simple(liste):
+    liste_simple = []
+    for sous_liste in liste:
+        liste_simple.extend(sous_liste)
+    return liste_simple

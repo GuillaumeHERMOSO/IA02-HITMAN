@@ -98,8 +98,9 @@ class HitmanKnowledge:
         
 
     def add_knowledge(self, position: Tuple[int, int], content: HC):
-        if (not self.has_knowledge(position[0], position[1]) or self.knowledge[position] in [HC.N]):
+        if ((not self.has_knowledge(position[0], position[1])) or self.knowledge[position] == HC.N):
             self.knowledge[position] = content
+
             self.maj_vision_garde()
             pass
         pass
@@ -376,9 +377,17 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee, dico : dict) :
             elif tableau_resultat[li][col] == HC.TARGET:
                 tab_finale[li][col] = "T"
             elif tableau_resultat[li][col] == HC.PIANO_WIRE:
-                tab_finale[li][col] = "P"
+                tab_finale[li][col] = "A" # A pour arme
             elif tableau_resultat[li][col] == HC.EMPTY:
                 tab_finale[li][col] = " "
+            elif tableau_resultat[li][col] == HC.N:
+                tab_finale[li][col] = "P"
+                tab_finale[li][col+1] = ">"
+                tab_finale[li][col-1] = "<"
+                tab_finale[li-1][col] = "^"
+                tab_finale[li+1][col] = "v"
+
+
 
 
 

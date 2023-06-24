@@ -306,31 +306,27 @@ def main5_sat():
     clauses : ClauseBase = []
 
     list_cases = creer_list_var(m, n)
-    dict_var_to_num = creer_dictionnaire_cases_par_list(list_cases)
+    dict_var_to_num, nombre_clauses = creer_dictionnaire_cases_par_list(list_cases)
 
     clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
     clauses_ecoute = ecouter(hr, dict_var_to_num)
-    print(clauses_con)
-    print(clauses_ecoute)
-    print(clauses)
 
     for ligne in clauses_ecoute:
-        if ligne not in clauses:  # sans doublons
-            clauses.append(ligne)
+        clauses.append(ligne)
     for ligne in clauses_con:
-        if ligne not in clauses:  # sans doublons
-            clauses.append(ligne)
-    #clauses = supprimer_doublons(clauses)
+        clauses.append(ligne)
+    clauses = supprimer_doublons(clauses)
 
-    clauses = boucle_deduction(dict_var_to_num, con, clauses)
-    print(clauses)
+    clauses = boucle_deduction(dict_var_to_num, con, clauses,nombre_clauses)
     afficher(con, hr, status)
 
 
     input("Appuyer sur une touche pour continuer")
     status = debut_map(hr, con)
     os.system('cls' if os.name == 'nt' else 'clear')
+    print("\n _____________________________________________________________________________________________")
     afficher(con, hr, status)
+    print("_____________________________________________________________________________________________\n")
     print(status["position"], status["orientation"], status["penalties"])
     s0 = status["position"]
     visited = [s0]
@@ -377,25 +373,24 @@ def main5_sat():
             clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
             clauses_ecoute = ecouter(hr, dict_var_to_num)
 
-            print(clauses_con)
-            print(clauses_ecoute)
-            print(clauses)
             for ligne in clauses_ecoute:
-                if ligne not in clauses:  # sans doublons
                     clauses.append(ligne)
             for ligne in clauses_con:
-                if ligne not in clauses:  # sans doublons
                     clauses.append(ligne)
-            # clauses = supprimer_doublons(clauses)
-            for elt in clauses :
-                print(elt)
-            clauses = boucle_deduction(dict_var_to_num, con, clauses)
-            print(clauses)
+            clauses = supprimer_doublons(clauses)
+
+            clauses = boucle_deduction(dict_var_to_num, con, clauses,nombre_clauses)
             os.system('cls' if os.name == 'nt' else 'clear')
+            print("\n _____________________________________________________________________________________________")
             afficher(con, hr, status)
+            print("_____________________________________________________________________________________________\n")
+
             sleep(0.2)
         os.system('cls' if os.name == 'nt' else 'clear')
+        print("\n _____________________________________________________________________________________________")
         afficher(con, hr, status)
+        print(" _____________________________________________________________________________________________\n")
+
         print(status["position"], status["orientation"], status["penalties"])
 
         # on est au bon endroit on tourne dans la direction nous permettant de voir la case inconnu
@@ -410,16 +405,12 @@ def main5_sat():
             clauses_ecoute = ecouter(hr, dict_var_to_num)
 
             for ligne in clauses_ecoute:
-                if ligne not in clauses:  # sans doublons
                     clauses.append(ligne)
-            print(clauses_con)
             for ligne in clauses_con:
-                if ligne not in clauses:  # sans doublons
                     clauses.append(ligne)
-            print(clauses)
-            # clauses = supprimer_doublons(clauses)
+            clauses = supprimer_doublons(clauses)
 
-            clauses = boucle_deduction(dict_var_to_num, con, clauses)
+            clauses = boucle_deduction(dict_var_to_num, con, clauses,nombre_clauses)
 
         con.affichage_vison()
         print("\n _____________________________________________________________________________________________\n")
