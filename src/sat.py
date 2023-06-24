@@ -7,6 +7,8 @@ Clause = List[Literal]
 ClauseBase = List[Clause]
 Model = List[Literal]
 from src.Class_HitmanKnowledge import *
+
+
 def creer_list_var(m: int, n: int) -> list:
     list_cases = []
     for j in range(0,m):

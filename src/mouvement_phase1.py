@@ -2,18 +2,7 @@ from src.arbitre.hitman import *
 from src.Class_HitmanKnowledge import *
 from src.a_etoile import *
 
-def trois_six(hr : HitmanReferee, know : HitmanKnowledge):
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    status = hr.turn_clockwise()
-    know.ajout_voir_knowledge(status)
-    #print(know)
-    #print(status["position"])
-    return status
+
 
 def orientation_hitman(status :Dict) ->Tuple[int,int]:
     orientation :HC  = status["orientation"]
@@ -26,91 +15,24 @@ def orientation_hitman(status :Dict) ->Tuple[int,int]:
     elif orientation == HC.W:
         offset = -1, 0
     return offset
-def nbr_inconu_autour_hitman(x :int, y :int, know :HitmanKnowledge):
-    """ Renvoie le nombre de case inconnu autour de la position x,y, hitman a une vision de porter 3"""
-    nbr = 0
-    #on regarde nord : (x,y+1), (x,y+2), (x,y+3)
-    #on regarde est : (x+1,y), (x+2,y), (x+3,y)
-    #on regarde sud : (x,y-1), (x,y-2), (x,y-3)
-    #on regarde ouest : (x-1,y), (x-2,y), (x-3,y)
-    for i in range(1,4):
-        if (x,y+i) not in know.knowledge and y+i < know.n and y+i >= 0:
-            nbr += 1
-        if (x+i,y) not in know.knowledge and x+i < know.m and x+i >= 0:
-            nbr += 1
-        if (x,y-i) not in know.knowledge and y-i < know.n and y-i >= 0:
-            nbr += 1
-        if (x-i,y) not in know.knowledge and x-i < know.m and x-i >= 0:
-            nbr += 1
 
-    return nbr
 
-def nbr_mur_coller(pos : State, walls) -> int:
-    """ retourne le nombre de mur autour de pos"""
-    res = 0
-    for a in range(-1,2):
-        if (pos[0]+a, pos[1]) in walls:
-            res +=1
-        if (pos[0], pos[1]+a) in walls:
-            res +=1
-    return res
-
-def nbr_inconu_coller(pos : State, know:HitmanKnowledge)->int:
-    """ Retourne le nombre de case inconnu autour de pos"""
-    dico = know.get_all_knowledge()
-    m = know.m
-    n = know.n
-    res = 0
-    for a in range(-1,2):
-        if pos[0]+a<n and pos[0]+a>0 and (pos[0]+a, pos[1]) not in dico:
-            res +=1
-        if pos[1]+a<m and pos[1]+a>0 and (pos[0], pos[1]+a) not in dico:
-            res +=1
-    return res
-    
-def nbr_obstacle(a:State, b:State, know:HitmanKnowledge) -> int:
-    """Compte le nombre d'obstacle entre a et b (garde, ou mur)"""
-    res = 0
-    if a[0] == b[0]:
-        for i in range(min(a[1],b[1]), max(a[1],b[1])):
-            if know.has_knowledge(a[0],i) and know.knowledge[(a[0],i)] in [HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.WALL]:
-                res += 1
-    elif a[1] == b[1]:
-        for i in range(min(a[0],b[0]), max(a[0],b[0])):
-            if know.has_knowledge(i,a[1]) and know.knowledge[(i,a[1])] in [HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.WALL]:
-                res += 1
-    #print(f"il y a {res} obstacle entre {a} et {b}")
-    return res
 
 def get_liste_case_inconnu_plus_proche_hitman(x :int, y :int,n: int, m:int, know :HitmanKnowledge) -> List[Tuple[int,int]]:
-    """ Retourne la liste des cases inconnu les plus proche de hitman trier par le calcul de la distance de manhattan et le nombre de mur entre hitman et la case"""
+    """ Retourne la liste des cases inconnu les plus proche de hitman trier par le calcul de la distance de manhattan """
     case = []
-    walls = know.get_liste_mur()
-    case_vu = know.get_liste_casevu()
 
     for i in range(n):
         for j in range(m):
-            if (i,j) not in know.knowledge or  know.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
+            if (i,j) not in know.knowledge or  know.knowledge[(i,j)] in [HC.N]:
                 case.append((i,j))
-    #TODO trouver un meuilleur heuristique pour trier
-    # case.sort(key=lambda k: (distanceManhattan(k,(x,y)) - 5*nbr_mur_coller(k,walls) - 2*nbr_inconu_coller(k,know)))
-    #case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu)))
 
-    # nbr de case vu dans case_connu qui peut voir la case : for k in (case_connu_qui_peut_voir_une_case(a, know)[0] : if is_case_vu(k,case_vu ):nbr += 1
-    # en une ligne pour le mettre key = lambda :
-    dico={}
-    for a in case:
-        dico[a] = 0
-        for k in case_connu_qui_peut_voir_une_case(a, m, n, know.get_all_knowledge())[0]:
-            if is_case_vu(k,case_vu):
-                dico[a] += 1
-    #case.sort(key=lambda k: (distanceManhattan(k,(x,y)) + 5*is_case_vu(k, case_vu) + dico[k]))
-    case.sort(key=lambda k: (distanceManhattan(k,(x,y)) ))#+ 5*is_case_vu(k, case_vu) + nbr_obstacle(k, (x,y), know)))
+    case.sort(key=lambda k: (distanceManhattan(k,(x,y)) ))
 
     return case
 
 def get_action(pos1 :Tuple[int,int], pos2 :Tuple[int,int], orientation : HC, know :HitmanKnowledge, hr:HitmanReferee) -> Tuple[List[Callable[[],None]],HC]:
-    """"Renvoie une liste d'action et l'orientation pour aller de pos1 a pos2
+    """"Renvoie une liste d'action et l'orientation pour aller de pos1 a pos2 adjacente 
         action possible : 
         move
         turn_clockwise
@@ -240,6 +162,7 @@ def tourner(orientation_actuel: HC, orientation_voulu: HC, hr:HitmanReferee) -> 
         
 
 def debut_map(hr : HitmanReferee, know : HitmanKnowledge):
+    """ effectue une liste d'action pour explorer la map au debut de la partie"""
     status = hr.start_phase1()
     pos = status["position"]
     orientation = status["orientation"]
@@ -493,3 +416,61 @@ def debut_map(hr : HitmanReferee, know : HitmanKnowledge):
             status = hr.turn_clockwise()
             know.ajout_voir_knowledge(status)
     return status
+
+
+# fonctions pouvant servir a l'heuristique
+def nbr_inconu_autour_hitman(x :int, y :int, know :HitmanKnowledge):
+    """ Renvoie le nombre de case inconnu autour de la position x,y, hitman a une vision de porter 3"""
+    nbr = 0
+    #on regarde nord : (x,y+1), (x,y+2), (x,y+3)
+    #on regarde est : (x+1,y), (x+2,y), (x+3,y)
+    #on regarde sud : (x,y-1), (x,y-2), (x,y-3)
+    #on regarde ouest : (x-1,y), (x-2,y), (x-3,y)
+    for i in range(1,4):
+        if (x,y+i) not in know.knowledge and y+i < know.n and y+i >= 0:
+            nbr += 1
+        if (x+i,y) not in know.knowledge and x+i < know.m and x+i >= 0:
+            nbr += 1
+        if (x,y-i) not in know.knowledge and y-i < know.n and y-i >= 0:
+            nbr += 1
+        if (x-i,y) not in know.knowledge and x-i < know.m and x-i >= 0:
+            nbr += 1
+
+    return nbr
+
+def nbr_mur_coller(pos : State, walls) -> int:
+    """ retourne le nombre de mur autour de pos"""
+    res = 0
+    for a in range(-1,2):
+        if (pos[0]+a, pos[1]) in walls:
+            res +=1
+        if (pos[0], pos[1]+a) in walls:
+            res +=1
+    return res
+
+def nbr_inconu_coller(pos : State, know:HitmanKnowledge)->int:
+    """ Retourne le nombre de case inconnu autour de pos"""
+    dico = know.get_all_knowledge()
+    m = know.m
+    n = know.n
+    res = 0
+    for a in range(-1,2):
+        if pos[0]+a<n and pos[0]+a>0 and (pos[0]+a, pos[1]) not in dico:
+            res +=1
+        if pos[1]+a<m and pos[1]+a>0 and (pos[0], pos[1]+a) not in dico:
+            res +=1
+    return res
+    
+def nbr_obstacle(a:State, b:State, know:HitmanKnowledge) -> int:
+    """Compte le nombre d'obstacle entre a et b (garde, ou mur)"""
+    res = 0
+    if a[0] == b[0]:
+        for i in range(min(a[1],b[1]), max(a[1],b[1])):
+            if know.has_knowledge(a[0],i) and know.knowledge[(a[0],i)] in [HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.WALL]:
+                res += 1
+    elif a[1] == b[1]:
+        for i in range(min(a[0],b[0]), max(a[0],b[0])):
+            if know.has_knowledge(i,a[1]) and know.knowledge[(i,a[1])] in [HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.WALL]:
+                res += 1
+    #print(f"il y a {res} obstacle entre {a} et {b}")
+    return res

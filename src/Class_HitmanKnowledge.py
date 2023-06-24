@@ -16,22 +16,25 @@ class HitmanKnowledge:
         self.n = n
         self.knowledge = {}
         self.matrice_vision = {}
+        self.matrice_vision_civil = {}
     
     def has_knowledge(self, i: int, j: int) -> bool:
         return (i, j) in self.knowledge
 
 
-    def orientation_garde(self,garde):
-        if garde in [HC.GUARD_N, HC.N]:
+    def orientation_garde(self,garde : HC):
+        if garde in [HC.GUARD_N, HC.N, HC.CIVIL_N]:
             offset = 0, 1
-        elif garde in [HC.GUARD_E, HC.E]:
+        elif garde in [HC.GUARD_E, HC.E, HC.CIVIL_E]:
             offset = 1, 0
-        elif garde in [HC.GUARD_S, HC.S]:
+        elif garde in [HC.GUARD_S, HC.S, HC.CIVIL_S]:
             offset = 0, -1
-        elif garde in [HC.GUARD_W, HC.W]:
+        elif garde in [HC.GUARD_W, HC.W , HC.CIVIL_W]:
             offset = -1, 0
         return offset
-    def quadri_direction(self,position): # Ajoute dans la matrice de vision les 4 directions pour une personne deduite non vu ( HC.N )
+    
+    def quadri_direction(self,position): 
+    # Ajoute dans la matrice de vision les 4 directions pour une personne deduite non vu ( HC.N )
         direction = [HC.N,HC.E,HC.S,HC.W]
         vision = []
         for direc in direction :
@@ -47,8 +50,6 @@ class HitmanKnowledge:
                     break
         return vision
     def maj_vision_garde (self) :
-        """ Mettre a jour la matrice de vision des gardes """
-        #TODO voir si on peut faire autrement pour ne pas tt init
 
         self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
         for position in self.knowledge:
@@ -74,12 +75,33 @@ class HitmanKnowledge:
 
         pass
 
+    def maj_vision_civil (self) :
+        
+        self.matrice_vision_civil = {(i,j):0 for i in range(self.n) for j in range(self.m)}
+        for position in self.knowledge:
+            vision = []
+            if self.knowledge[position] in  [HC.CIVIL_N,HC.CIVIL_E,HC.CIVIL_S,HC.CIVIL_W]:
+                offset_x, offset_y = self.orientation_garde(self.knowledge[position])
+                x,y = position
+                for _ in range(0, 2):
+                    pos = x + offset_x, y + offset_y
+                    x, y = pos
+                    if x >= self.n or y >= self.m or x < 0 or y < 0:
+                        break
+                    vision.append(pos)
+                    if (self.has_knowledge(x,y) and self.knowledge[pos] != HC.EMPTY):
+                        break
+            for pos in vision:
+                self.matrice_vision_civil[pos] += 1
+
+        pass
+        
+
     def add_knowledge(self, position: Tuple[int, int], content: HC):
-        if (not self.has_knowledge(position[0], position[1]) or self.knowledge[position] in [HC.N, HC.E, HC.S, HC.W]):
+        if (not self.has_knowledge(position[0], position[1]) or self.knowledge[position] in [HC.N]):
             self.knowledge[position] = content
             self.maj_vision_garde()
             pass
-        #print("Erreur : la position est déjà connue")
         pass
 
     def get_knowledge(self, position: Tuple[int, int]) -> HC:
@@ -133,41 +155,6 @@ class HitmanKnowledge:
     def ajout_voir_knowledge(self, status: Dict):
         for pos,valeur in status["vision"] :
             self.add_knowledge(pos,valeur)
-        """if status["is_in_guard_range"]:
-            # on est vu en position pos 
-            print(f"\n\n\non est vu en position {status['position']} on mets des gardes potentiel")
-            pos = status["position"]
-            # on verifie si on a pas deja l'info :
-            a_nord = [(pos[0],pos[1]+1),(pos[0],pos[1]+2)]
-            for pos in a_nord :
-                if self.has_knowledge(pos[0],pos[1]) and self.knowledge[pos] == HC.GUARD_S:
-                    return
-            a_sud = [(pos[0],pos[1]-1),(pos[0],pos[1]-2)]
-            for pos in a_sud :
-                if self.has_knowledge(pos[0],pos[1]) and self.knowledge[pos] == HC.GUARD_N:
-                    return
-            a_est = [(pos[0]+1,pos[1]),(pos[0]+2,pos[1])]
-            for pos in a_est :
-                if self.has_knowledge(pos[0],pos[1]) and self.knowledge[pos] == HC.GUARD_W:
-                    return
-            if (pos[1]+1 < self.m):
-                self.add_knowledge((pos[0],pos[1]+1),HC.S)
-            if (pos[1]+2 < self.m):
-                self.add_knowledge((pos[0],pos[1]+2),HC.S)
-            if (pos[0]+1 < self.n):
-                self.add_knowledge((pos[0]+1,pos[1]),HC.W)
-            if (pos[0]+2 < self.n):
-                self.add_knowledge((pos[0]+2,pos[1]),HC.W)
-            if (pos[1]-1 >= 0):
-                self.add_knowledge((pos[0],pos[1]-1),HC.N)
-            if (pos[1]-2 >= 0):
-                self.add_knowledge((pos[0],pos[1]-2),HC.N)
-            if (pos[0]-1 >= 0):
-                self.add_knowledge((pos[0]-1,pos[1]),HC.E)
-            if (pos[0]-2 >= 0):
-                self.add_knowledge((pos[0]-2,pos[1]),HC.E)
-"""
-
         pass
 
     def je_sais_pas_tt(self):
@@ -176,7 +163,7 @@ class HitmanKnowledge:
             for j in range(self.m):
                 if not self.has_knowledge(i,j):
                     return True
-                if self.knowledge[(i,j)] in [HC.N, HC.E, HC.S, HC.W]:
+                if self.knowledge[(i,j)] in [HC.N]:
                     return True
         return False
 
@@ -197,15 +184,22 @@ class HitmanKnowledge:
                 r.append(pos)
         return r
 
+    def get_liste_casevu_civil(self)->List[Tuple[int,int]]:
+        """Retourne la liste des cases vues"""
+        self.maj_vision_civil()
+        r = []
+        for pos,val in self.matrice_vision.items():
+            if val != 0:
+                r.append(pos)
+        return r
 
     
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
-    r = []
+    r : ClauseBase = [] 
     for i,v in Dico_know.items():
         #print(v)
-        if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W]:
-            #print(f"{i[0]}{i[1]}_P")
-            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"]) # type: ignore
+        if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.N]:
+            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"]) 
     return r
 
 
@@ -239,11 +233,8 @@ def ajouter_zeros_autour(tableau_original):
 
     return tableau_resultat
 
-def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
+def afficher(hc : HitmanKnowledge, hr: HitmanReferee, dico : dict) :
     tableau = []
-
-    dico = hr.start_phase1()
-
     x,y = dico["position"] # Position de Hitman
     for i in range(hc.n) :
         tableau.append([])
@@ -254,7 +245,7 @@ def afficher(hc : HitmanKnowledge, hr: HitmanReferee) :
                 tableau[i].append(hc.get_knowledge((i, j)))
             else :
                 tableau[i].append("X")
-        print(tableau[i])
+        #print(tableau[i])
     tableau_resultat = ajouter_zeros_autour(transpose_tableau(tableau)) # tableau bien mis ( (0,m) = en haut a gauche , (n,m) = en haut a droite )
     tab_finale = []
     x_1 = 0
