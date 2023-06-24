@@ -303,38 +303,28 @@ def main5_sat():
     con = HitmanKnowledge(m=m, n=n)
     con.ajout_voir_knowledge(status)
 
-    clauses = [[]]
+    clauses : ClauseBase = []
 
     list_cases = creer_list_var(m, n)
     dict_var_to_num = creer_dictionnaire_cases_par_list(list_cases)
 
     clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
     clauses_ecoute = ecouter(hr, dict_var_to_num)
+    print(clauses_con)
+    print(clauses_ecoute)
+    print(clauses)
 
-    clauses += clauses_ecoute
-    clauses += clauses_con
-
+    for ligne in clauses_ecoute:
+        if ligne not in clauses:  # sans doublons
+            clauses.append(ligne)
+    for ligne in clauses_con:
+        if ligne not in clauses:  # sans doublons
+            clauses.append(ligne)
     #clauses = supprimer_doublons(clauses)
 
     clauses = boucle_deduction(dict_var_to_num, con, clauses)
+    print(clauses)
     afficher(con, hr, status)
-
-
-
-
-
-
-
-    clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
-    clauses_ecoute = ecouter(hr, dict_var_to_num)
-
-    clauses += clauses_ecoute
-    clauses += clauses_con
-
-    #clauses = supprimer_doublons(clauses)
-
-    clauses = boucle_deduction(dict_var_to_num, con, clauses)
-
 
 
     input("Appuyer sur une touche pour continuer")
@@ -387,12 +377,20 @@ def main5_sat():
             clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
             clauses_ecoute = ecouter(hr, dict_var_to_num)
 
-            clauses += clauses_ecoute
-            clauses += clauses_con
-
-            #clauses = supprimer_doublons(clauses)
-
+            print(clauses_con)
+            print(clauses_ecoute)
+            print(clauses)
+            for ligne in clauses_ecoute:
+                if ligne not in clauses:  # sans doublons
+                    clauses.append(ligne)
+            for ligne in clauses_con:
+                if ligne not in clauses:  # sans doublons
+                    clauses.append(ligne)
+            # clauses = supprimer_doublons(clauses)
+            for elt in clauses :
+                print(elt)
             clauses = boucle_deduction(dict_var_to_num, con, clauses)
+            print(clauses)
             os.system('cls' if os.name == 'nt' else 'clear')
             afficher(con, hr, status)
             sleep(0.2)
@@ -411,10 +409,15 @@ def main5_sat():
             clauses_con = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
             clauses_ecoute = ecouter(hr, dict_var_to_num)
 
-            clauses += clauses_ecoute
-            clauses += clauses_con
-
-            #clauses = supprimer_doublons(clauses)
+            for ligne in clauses_ecoute:
+                if ligne not in clauses:  # sans doublons
+                    clauses.append(ligne)
+            print(clauses_con)
+            for ligne in clauses_con:
+                if ligne not in clauses:  # sans doublons
+                    clauses.append(ligne)
+            print(clauses)
+            # clauses = supprimer_doublons(clauses)
 
             clauses = boucle_deduction(dict_var_to_num, con, clauses)
 
@@ -508,4 +511,5 @@ def main_phase1_2():
     #fini
 
 if __name__ == "__main__":
-    main_phase1_2()
+    #main_phase1_2()
+    main5_sat()

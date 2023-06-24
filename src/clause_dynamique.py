@@ -43,15 +43,14 @@ def ecouter(hr : HitmanReferee,dict_var_to_num) : # ecouter avec l'arbitre
     else:                   # sinon : cas general
         min_j, max_j = (j - 2, j + 2)
 
-    for a in range(min_i,max_i):
-        for b in range(min_j, max_j):
+    for b in range(min_j, max_j):
+        for a in range(min_i,max_i):
             variables.append(f"{a}{b}_P")       # on génère nos variables
 
     for elt in variables :
         r.append(dict_var_to_num[elt]) # Transformation en valeurs utilisable dans SAT
     if k >= 5:
         return at_least_k(5,r) # Si on entend au moins 5 personnes
-
     return exactly_k(k,r)  # Si on entend moins de 5 personnes
 
 

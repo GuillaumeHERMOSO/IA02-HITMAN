@@ -33,7 +33,7 @@ class HitmanKnowledge:
             offset = -1, 0
         return offset
     
-    def quadri_direction(self,position): 
+    def quadri_direction(self,position : Tuple[int,int]):
     # Ajoute dans la matrice de vision les 4 directions pour une personne deduite non vu ( HC.N )
         direction = [HC.N,HC.E,HC.S,HC.W]
         vision = []
@@ -41,7 +41,7 @@ class HitmanKnowledge:
             offset_x, offset_y = self.orientation_garde(direc)
             x, y = position
             for _ in range(0, 2):
-                pos = x + offset_x, y + offset_y
+                pos = int(x) + offset_x, int(y) + offset_y
                 x, y = pos
                 if x >= self.n or y >= self.m or x < 0 or y < 0:
                     break
@@ -195,11 +195,11 @@ class HitmanKnowledge:
 
     
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
-    r : ClauseBase = [] 
+    r = []
     for i,v in Dico_know.items():
         #print(v)
         if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.N]:
-            r.append(dict_var_to_num[f"{i[0]}{i[1]}_P"]) 
+            r.append([dict_var_to_num[f"{i[0]}{i[1]}_P"]])
     return r
 
 

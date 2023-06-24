@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="ajout de pleins de fonctions : erreur lors de l'execution du sat, voir ce qu'a dit le prof sur l'etude du sat en mode local">
+    <list default="true" id="7ed8d275-2eac-45ef-8f89-ac11777b551f" name="Changes" comment="rajout du main_5_sat">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Class_HitmanKnowledge.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Class_HitmanKnowledge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/clause_dynamique.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/clause_dynamique.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sat.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sat.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +41,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2PooukEWHkAY6WdW1cQoO9WE19r" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -116,7 +122,7 @@
       <workItem from="1686767184102" duration="5874000" />
       <workItem from="1686835771485" duration="884000" />
       <workItem from="1687286065061" duration="14314000" />
-      <workItem from="1687617451306" duration="1199000" />
+      <workItem from="1687617451306" duration="8604000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1685034653894</created>
@@ -209,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1687300880132</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="rajout du main_5_sat">
+      <option name="closed" value="true" />
+      <created>1687625352243</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1687625352243</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -237,10 +251,11 @@
     <MESSAGE value="ajout ref" />
     <MESSAGE value="ajout suppressions doublons + debut de main_5_V2" />
     <MESSAGE value="ajout de pleins de fonctions : erreur lors de l'execution du sat, voir ce qu'a dit le prof sur l'etude du sat en mode local" />
-    <option name="LAST_COMMIT_MESSAGE" value="ajout de pleins de fonctions : erreur lors de l'execution du sat, voir ce qu'a dit le prof sur l'etude du sat en mode local" />
+    <MESSAGE value="rajout du main_5_sat" />
+    <option name="LAST_COMMIT_MESSAGE" value="rajout du main_5_sat" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/test2_cnf$main.coverage" NAME="main Coverage Results" MODIFIED="1687300401511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/test2_cnf$main.coverage" NAME="main Coverage Results" MODIFIED="1687636023180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/IA02_HITMAN$verite_sur_le_monde.coverage" NAME="verite_sur_le_monde Coverage Results" MODIFIED="1684133559208" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

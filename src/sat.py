@@ -134,30 +134,31 @@ def deduction(dict_var_to_num : dict,hc : HitmanKnowledge,Clauses : ClauseBase, 
     
     return Clauses
 
-def boucle_deduction(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : ClauseBase):
+def boucle_deduction(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : ClauseBase) -> ClauseBase:
     temp = clauses
     list_var = hc.get_no_knowledge_clause(dict_var_to_num)
-    if list_var == [] : return 0 # rien à deduire, tout est connu
-    nb_vars = len(list_var)
-    for var in list_var:
+    nv_list_var = []
+    for elt in list_var :
+        for ligne in clauses :
+            if len(ligne) >  1 : # pas clause unitaire
+                if elt in ligne or -elt in ligne :
+                    nv_list_var.append(elt)
+    nv_list_var = list(set(nv_list_var))  # suppression des doublons
+    if nv_list_var == [] : return clauses # rien à deduire, tout est connu
+    nb_vars = len(nv_list_var)
+    for var in nv_list_var:
         temp = deduction(dict_var_to_num,hc,temp, nb_vars, var)
+        print(temp)
     return temp
 
 
 def supprimer_doublons(liste : ClauseBase) -> ClauseBase:
-    result = []
-    seen = set()
-
+    liste_sans_doublons = []
     for sous_liste in liste:
-        sous_liste_unique = []
-        for element in sous_liste:
-            if element not in seen:
-                sous_liste_unique.append(element)
-                seen.add(element)
-        if sous_liste_unique != [] :
-            result.append(sous_liste_unique)
+        if sous_liste not in liste_sans_doublons:
+            liste_sans_doublons.append(sous_liste)
+    return liste_sans_doublons
 
-    return result
 def trouver_cle(dictionnaire, valeur):
     for cle, val in dictionnaire.items():
         if val == valeur:
