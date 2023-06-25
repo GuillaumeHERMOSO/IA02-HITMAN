@@ -115,10 +115,22 @@ Pour chaque chemin, nous calculons la pénalité en fonction des actions effectu
 ### 2.2 Modelisation STRIPS 
 Notre modelisation est diponible dans le fichier `ModélisationSTRIPS.pdf`
 
+## Forces et Faiblesses de notre projet
 
+### Forces : 
+- Parcours efficace lors des différentes phases ( peu de pénalité ou presque aucune) .
+- Utilisation d'une classe de connaissance pratique et modulable en fonction des besoins ( récupérations des données fournis par l'arbitre, ajout de connaissances, compatibilité avec les déductions du solveur SAT en phase 1 )
+- Interface graphique pratique et efficace ( on sait ce qu'on voit, ce qu'il reste à voir,l'orientation des gardes, des civils et du joueur ).
 
+### Faiblesses  : 
+- Déductions du solveur SAT chronophage ( lors de la phase 1 ) du au nombre de clauses, donc une augmentation du temps d'execution ( 10 fois supérieur à la version sans déduction).
+- Fonctions heuristiques à améliorer (certaines configurations de cartes nous font perdres beaucoup de points ).
+- Code assez lourd et pouvant être amélioré pour être plus efficace. 
+        
 
 ## Lancer le projet
+
+### 1.1 Les fonctions main 
 
 Nous avons plusieurs exemples de `main` permettant de lancer le projet et ses différentes phases :
 
@@ -140,8 +152,9 @@ def phase2(hr: HitmanReferee, con: HitmanKnowledge, affichage=False, temp=0.5):
 ```
 Pour la phase 2, vous pouvez choisir si vous voulez afficher la carte à chaque itération et le temps de pause entre chaque itération.
 
-L'affichage 
-- Pour la carte : "O" est Hitman et la flèche ("^",">","v","<") représente la direction dans laquelle il regarde actuellement, idem pour "G" : Garde et "C": Civil.
+### 1.2 L'affichage 
+
+- "O" est Hitman et la flèche ("^",">","v","<") représente la direction dans laquelle il regarde actuellement, idem pour "G" : Garde et "C": Civil.
 - "X" : Non découvert
 - "A" : Arme (Corde de piano)
 - "S" : Suit ( Le déguisement)
