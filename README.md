@@ -85,3 +85,13 @@ C'est à causes de ces multiples problèmes que nous avons décidés de ne pas i
 
 
 ## Phase 2
+
+## Comment lancer le projet :
+
+- Télécharger le dossier src et main.py
+- Lancer le fichier main.py ( attendre quelques secondes, une carte devrait s'afficher )
+- Pour la carte : "O" est Hitman et la flèche ("^",">","v","<") représente la direction dans laquelle il regarde actuellement, idem pour "G" : Garde et "C": Civil.
+- X : Non découvert
+- A : Arme (Corde de piano)
+- S : Suit ( Le déguisement)
+- "|" ou "-" : les murs de la carte 
