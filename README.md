@@ -1,10 +1,3 @@
-# IA02-HITMAN
-
-sujet : https://hackmd.io/@ia02/S1LNF3CMn
-
-arbitre : https://gitlab.utc.fr/ia02/hitman 
-
-
 # Projet IA02 - Hitman
 
 ## Binôme de projet 60:
@@ -155,3 +148,8 @@ L'affichage
 
 exemple d'affichage :
 ![Alt text](image.png)
+
+## Liens utiles
+
+sujet : https://hackmd.io/@ia02/S1LNF3CMn
+arbitre : https://gitlab.utc.fr/ia02/hitman 
