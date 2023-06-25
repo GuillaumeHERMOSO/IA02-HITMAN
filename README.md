@@ -135,6 +135,8 @@ Faiblesses  :
 
 ## Lancer le projet
 
+### 1.1 Les fonctions main 
+
 Nous avons plusieurs exemples de `main` permettant de lancer le projet et ses différentes phases :
 
 - `main_phase1()` : permet de lancer uniquement la phase 1.
@@ -155,7 +157,8 @@ def phase2(hr: HitmanReferee, con: HitmanKnowledge, affichage=False, temp=0.5):
 ```
 Pour la phase 2, vous pouvez choisir si vous voulez afficher la carte à chaque itération et le temps de pause entre chaque itération.
 
-L'affichage 
+### 1.2 L'affichage 
+
 - Pour la carte : "O" est Hitman et la flèche ("^",">","v","<") représente la direction dans laquelle il regarde actuellement, idem pour "G" : Garde et "C": Civil.
 - "X" : Non découvert
 - "A" : Arme (Corde de piano)
