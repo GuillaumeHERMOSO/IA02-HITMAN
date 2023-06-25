@@ -39,8 +39,8 @@ def main_phase1_2():
     hr = HitmanReferee()
     status = hr.start_phase1()
 
-    temp = 0.1
-    con = phase1(hr,affichage=True, temp=temp/2)
+    temp = 0.5
+    con = phase1(hr,affichage=True, temp=temp)
     status = hr.send_content(con.get_all_knowledge())
     status = hr.end_phase1()
 

@@ -306,9 +306,4 @@ def phase2(hr: HitmanReferee, con : HitmanKnowledge, affichage = False, temp = 0
 
     status=hr.end_phase2()
     pprint(status)
-    print(status[0])
 
-    
-
-    # actions 2 : depart -> costume -> corde -> target -> tuer -> 0,0
-    # actions 3 : depart -> corde -> costume -> target -> tuer -> 0,0
