@@ -1,12 +1,18 @@
 import os
+import time
 from src.mouvement_phase1 import *
 from src.a_etoile import *
 from src.arbitre.hitman import *
 from src.Class_HitmanKnowledge import *
 from pprint import pprint
+from src.sat import *
+from src.clause_dynamique import *
 
 
-def phase1 (hr :HitmanReferee, sat = False, affichage = False, temp = 0.5):
+def phase1 (hr :HitmanReferee, sat = False, affichage = False, temp = 0.5, cb_de_temp = True):
+    if cb_de_temp:
+        start = time.time()
+
     status = hr.start_phase1()
     n = status["n"]
     m = status["m"]
@@ -23,7 +29,14 @@ def phase1 (hr :HitmanReferee, sat = False, affichage = False, temp = 0.5):
         print(f"{status['position']} {status['orientation']} p :{status['penalties']}")
     
     # on applique la strategie de debut de partie
-    status = debut_map(hr,con)
+    if sat:
+        clauses : ClauseBase = []
+        list_cases = creer_list_var(m, n)
+        dict_var_to_num, comp = creer_dictionnaire_cases_par_list(list_cases)
+        clauses_pas_connaissance = []
+    
+
+    status= debut_map(hr,con)
 
 
     
@@ -46,10 +59,18 @@ def phase1 (hr :HitmanReferee, sat = False, affichage = False, temp = 0.5):
         liste = get_liste_case_inconnu_plus_proche_hitman(s0[0],s0[1], n,m, con)
         buts = []
 
-        #TODO SAT
         if sat:
-            # TODO ???
-            pass
+            clauses_connaissance = knowledge_to_clause_personne(con.get_all_knowledge(), dict_var_to_num)
+            clauses_pas_connaissance += ecouter(hr, dict_var_to_num)
+            clauses = clauses_connaissance + clauses_pas_connaissance
+            boucle_deduction2(dict_var_to_num, con, clauses, len(list_cases))
+            
+            if affichage: 
+                sleep(temp)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print()
+                afficher(con,hr,status)
+                print(f"{status['position']} {status['orientation']} p :{status['penalties']}")
 
         
         # tant qu'on a pas de destination on regarde si on peut voir une case inconnu
@@ -79,7 +100,7 @@ def phase1 (hr :HitmanReferee, sat = False, affichage = False, temp = 0.5):
             status = a()
             con.ajout_voir_knowledge(status)
             if sat:
-                # TODO mettre l'ecoute dans les clauses
+                clauses_pas_connaissance += ecouter(hr, dict_var_to_num)
                 pass
 
             if affichage:
@@ -100,15 +121,18 @@ def phase1 (hr :HitmanReferee, sat = False, affichage = False, temp = 0.5):
                 # TODO mettre l'ecoute dans les clauses
                 pass
 
-            if affichage:
+            if affichage: 
                 sleep(temp)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(a.__name__)
                 afficher(con,hr,status)
                 print(f"{status['position']} {status['orientation']} p :{status['penalties']}")
     
-
+        
   
-
+    if cb_de_temp:
+        
+        end = time.time()
+        print(f"temps d'execution : {end - start}")
     # on a tout vu on envoie le contenu au main
     return con
