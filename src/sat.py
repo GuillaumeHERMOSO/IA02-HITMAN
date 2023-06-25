@@ -76,7 +76,7 @@ def deduction(dict_var_to_num : dict,hc : HitmanKnowledge,Clauses : ClauseBase, 
     if res[0] == False:
         print(f"on deduit  : {trouver_cle(dict_var_to_num,var_tester)}")
         pos = trouver_cle(dict_var_to_num,var_tester) # On récupère les coordonnées de l'individu déduit
-        pos = (int(pos[0]),int(pos[1]))
+        pos = (int(pos[0]),int(pos[1])) 
         hc.add_knowledge(pos,HC.N)   # Ajout d'un individu déduit
 
         return  Clauses +[[var_tester]]
