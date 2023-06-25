@@ -65,7 +65,7 @@ pas utilisé car pas assez performante:
 
 
 
-### Modélisation SAT
+### SAT
 
 Nous souhaitions utiliser le solveur SAT afin de déduire des informations, nous avons rencontrés plusieurs problèmes lors de son implémentation tel que : 
 - La réecriture impossible d'un fichier SAT à partir de lui même (ce qui nous a contraint à devoir écrire un nouveau fichier de zéro à chaque fois et exploser le temps de calcul )
@@ -82,7 +82,6 @@ Nous souhaitions utiliser le solveur SAT afin de déduire des informations, nous
 - Le tableau de clause (ClauseBase donc List[List[int]]) ne contenait que des clauses référents à des personnes soit vu par Hitman (unitaires) soit écoutés.
 - Les clauses d'écoute sont créer à partir d'une fonction python, qui, pour chaque situation de Hitman, c'est a dire du nombre de cases autour de lui( si il est situé près d'un mur, un coin , etc...Sinon il y a un rayon d'écoute de 2 cases autour de lui (25 cases en tout)) et du nombre de personnes k écoutés, générait soit une base de clauses avec la fonction exactly(k,liste_variables), soit une base de clauses at_least(5,liste_variables) si le nombre de personnes entendues dépassait 5. 
 - La déduction a petit a petit commencé a devenir impossible du fait du nombre de clauses en fin d'exploration (~500 000), ce qui empêchait de continuer le parcours de la map (il fallait attendre plusieurs minutes par itération pour la carte d'exemple qui est assez petite). Cependant, le solveur arrivait parfois à deviner les positions des gardes et des civils sur la carte, il fallait lui laisser du temps.
-- 
 
 C'est à causes de ces multiples problèmes que nous avons décidés de ne pas inclure la déduction par solveur SAT lors de la phase 1. 
 
