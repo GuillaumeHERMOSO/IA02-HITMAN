@@ -15,8 +15,9 @@
 - [Phase 2](#phase-2)
     - [2.1 Stratégie](#21-stratégie)
     - [2.2 Modelisation STRIPS](#22-modelisation-strips)
-- [Lancer le projet](#lancer-le-projet)
 - [Forces et faiblesses](#forces-et-faiblesses)
+- [Lancer le projet](#lancer-le-projet)
+
 
 
 ## Prérequis
@@ -115,17 +116,22 @@ Pour chaque chemin, nous calculons la pénalité en fonction des actions effectu
 ### 2.2 Modelisation STRIPS 
 Notre modelisation est diponible dans le fichier `ModélisationSTRIPS.pdf`
 
-## Forces et Faiblesses de notre projet
+## Forces et Faiblesses
 
 ### Forces : 
-- Parcours efficace lors des différentes phases ( peu de pénalité ou presque aucune) .
+- La phase 1 est fonctionnelle et permet de découvrir toute les informations sur la carte.
+- La phase 1 peut être utilisée avec ou sans SAT.
+- La phase 2 est fonctionnelle et permet de repondre à la mission.
 - Utilisation d'une classe de connaissance pratique et modulable en fonction des besoins ( récupérations des données fournis par l'arbitre, ajout de connaissances, compatibilité avec les déductions du solveur SAT en phase 1 )
 - Interface graphique pratique et efficace ( on sait ce qu'on voit, ce qu'il reste à voir,l'orientation des gardes, des civils et du joueur ).
 
+
 ### Faiblesses  : 
-- Déductions du solveur SAT chronophage ( lors de la phase 1 ) du au nombre de clauses, donc une augmentation du temps d'execution ( 10 fois supérieur à la version sans déduction).
-- Fonctions heuristiques à améliorer (certaines configurations de cartes nous font perdres beaucoup de points ).
-- Code assez lourd et pouvant être amélioré pour être plus efficace. 
+- Déductions du solveur SAT chronophage ( phase 1) ( 30 000 fois superieur pour la carte founis : 0,008 s sans SAT contre 294,76 s).
+- SAT pas toujours rentable en score (Un score de 0 pour la carte founis avec SAT contre 4 sans SAT).
+- Fonctions heuristiques à améliorer (certaines configurations de cartes nous font perdres beaucoup de points).
+- La phase 2 ne prend pas en compte si il est rentable de neutraliser des personnes.
+
         
 
 ## Lancer le projet
@@ -165,16 +171,7 @@ exemple d'affichage :
 
 ![Alt text](image.png)
 
-## Forces et faiblesses
 
-- Forces :
-    - La phase 1 est fonctionnelle et permet de découvrir toute les informations sur la carte.
-    - La phase 1 peut être utilisée avec ou sans SAT.
-    - La phase 2 est fonctionnelle et permet de repondre à la mission.
-
-- Faiblesses :
-    - La phase 1 avec SAT est très lente et ne peut pas être utilisée sur des cartes trop grandes (en un temps raisonable).
-    - La phase 2 ne prend pas en compte si il est rentable de neutraliser des personnes.
 
 ## Liens utiles
 
