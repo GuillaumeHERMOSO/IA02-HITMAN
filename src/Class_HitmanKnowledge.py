@@ -49,6 +49,7 @@ class HitmanKnowledge:
                 if (self.has_knowledge(x, y) and self.knowledge[pos] != HC.EMPTY):
                     break
         return vision
+    
     def maj_vision_garde (self) :
 
         self.matrice_vision = {(i,j):0 for i in range(self.n) for j in range(self.m)}
@@ -196,9 +197,9 @@ class HitmanKnowledge:
 pass
 
 def knowledge_to_clause_personne(Dico_know : Dict[Tuple[int, int], HC], dict_var_to_num : Dict[str, int])-> ClauseBase:
+    """ Retourne une List de clause pour nos connaissances sur les personnes"""
     r = []
     for i,v in Dico_know.items():
-        #print(v)
         if v in [HC.CIVIL_E, HC.CIVIL_N, HC.CIVIL_S, HC.CIVIL_W, HC.GUARD_E, HC.GUARD_N, HC.GUARD_S, HC.GUARD_W, HC.N]:
             r.append([dict_var_to_num[f"{i[0]}{i[1]}_P"]])
         else:

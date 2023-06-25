@@ -40,7 +40,7 @@ def main_phase1_2():
     status = hr.start_phase1()
 
     temp = 0.5
-    con = phase1(hr,affichage=True, temp=temp)
+    con = phase1(hr,affichage=True,sat=True, temp=temp)
     status = hr.send_content(con.get_all_knowledge())
     status = hr.end_phase1()
 

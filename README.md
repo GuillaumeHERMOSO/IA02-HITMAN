@@ -171,7 +171,7 @@ Pour la phase 2, vous pouvez choisir si vous voulez afficher la carte à chaque 
 
 exemple d'affichage :
 
-![Alt text](image.png)
+![affichage.png](affichage.png)
 
 
 
