@@ -9,13 +9,14 @@
 ## Sommaire:
 - [Prérequis](#prérequis)
 - [Phase 1](#phase-1)
-    - [1.1 Strategie](#11-strategie)
+    - [1.1 Stratégie](#11-stratégie)
     - [1.2 Heuristique](#12-heuristique)
     - [1.3 SAT](#13-sat)
 - [Phase 2](#phase-2)
-    - [2.1 Strategie](#21-strategie)
+    - [2.1 Stratégie](#21-stratégie)
     - [2.2 Modelisation STRIPS](#22-modelisation-strips)
 - [Lancer le projet](#lancer-le-projet)
+- [Forces et faiblesses](#forces-et-faiblesses)
 
 
 ## Prérequis
@@ -38,7 +39,7 @@ Avant d'exécuter le code, assurez-vous d'avoir les éléments suivants :
 
 ## Phase 1
 
-### 1.1 Strategie 
+### 1.1 Stratégie 
 
 - Appliquer une stratégie de début de partie.
 - Tant que toutes les cases n'ont pas été explorées :
@@ -75,14 +76,14 @@ pas utilisé car pas assez performante:
 - Le plan est le suivant :
   
     1. Trouver une/des variable(s) à déduire, les implémenter dans une liste
-    2. Pour chaque élément de la liste, tester sa négation et voir si le solveur renvoie insatisfiable
-    3. Si oui : inclure la nouvelle variable dans notre dico de connaissances et également dans nos clauses (en tant que clause unitaire)
+    2. Pour chaque élément de la liste, tester sa négation dans SAT avec nos clauses et voir si le solveur renvoie insatisfiable
+    3. Si oui : inclure la nouvelle variable dans notre dictionnaire de connaissances.
     4. Si non : Ne rien déduire
+
 - La nature des variables sont des coordonées de personnes potentielles ( du type "ij_P") qui sont convertit en entier (admissible pour le solveur) avec un dictionnaire de conversion position-> valeur avec la clé la position potentielle et la valeur de cette clé un entier. Une valeur vaut donc une position potentielle d'une personne. 
-- Pour la recherche des variables à déduire, nous nous sommes limités aux variables déjà présentes dans la base de clauses et qui ne sont pas déjà des clauses unitaires ( 
- on ne prends que des variables qui sont présentes donc dans les clauses d'écoute), cela permet de ne vouloir déduire que ce qui a déjà été évoqué.
-- Le tableau de clause (ClauseBase donc List[List[int]]) ne contient que des clauses référents à des personnes soit vu par Hitman (unitaires) soit écoutés.
-- Les clauses d'écoutes sont crées à partir d'une fonction python, qui, pour chaque situation de Hitman, c'est a dire du nombre de cases autour de lui( si il est situé près d'un mur, un coin , etc...Sinon il y a un rayon d'écoute de 2 cases autour de lui (25 cases en tout)) et du nombre de personnes k écoutés, générait soit une base de clauses avec la fonction exactly(k,liste_variables), soit une base de clauses at_least(5,liste_variables) si le nombre de personnes entendues dépassait 5. 
+- Pour la recherche des variables à déduire, on recupere dans notre dictionnaire de connaissances les positions sans informations et on essaye pour chacune des variables de voir si nos clauses d'ecoute nous permmettent de déduire une personne sur cette position.
+- Avant chaque boucle de deduction on instancie un nouveau fichier SAT avec les clauses d'écoutes (depuis le debut) et les clauses de connaissances (actuelles).
+- Les clauses d'écoutes sont crées à partir d'une fonction python, qui, pour chaque situation de Hitman, c'est a dire du nombre de cases autour de lui( si il est situé près d'un mur, un coin , etc...Sinon il y a un rayon d'écoute de 2 cases autour de lui (25 cases en tout)) et du nombre de personnes k écoutés, genere soit une base de clauses avec la fonction `exactly`(k,liste_variables), soit une base de clauses `at_least`(5,liste_variables) si le nombre de personnes entendues dépassait 5 ( voir fichier : `src/contraintes.py`). 
 - Du fait du nombre de clauses en fin d'exploration (~500 000), le parcours de la carte prends plus de temps avec des déductions que sans. Cependant, le solveur arrive parfois à deviner les positions des gardes et des civils sur la carte.
 
   
@@ -93,12 +94,6 @@ Lors de l'implémentation du solveur SAT, nous avons rencontrés plusieurs probl
 - Une gestion abérrante du nombre de clauses : Plus la carte est grande, plus le nombre de clauses explose, ce qui nous a limité seulement à l'utilisation du solveur à la potentielle déduction des personnes (gardes et invités ) avec les clauses d'écoutes.
 
   
-
-
-
-
-
-
 ## Phase 2
 
 
@@ -156,6 +151,17 @@ L'affichage
 exemple d'affichage :
 
 ![Alt text](image.png)
+
+## Forces et faiblesses
+
+- Forces :
+    - La phase 1 est fonctionnelle et permet de découvrir toute les informations sur la carte.
+    - La phase 1 peut être utilisée avec ou sans SAT.
+    - La phase 2 est fonctionnelle et permet de repondre à la mission.
+
+- Faiblesses :
+    - La phase 1 avec SAT est très lente et ne peut pas être utilisée sur des cartes trop grandes (en un temps raisonable).
+    - La phase 2 ne prend pas en compte si il est rentable de neutraliser des personnes.
 
 ## Liens utiles
 
