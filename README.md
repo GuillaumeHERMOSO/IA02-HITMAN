@@ -147,6 +147,7 @@ L'affichage
 - "P" : represente une cible deduite par le solveur SAT mais pas encore vue par Hitman
 
 exemple d'affichage :
+
 ![Alt text](image.png)
 
 ## Liens utiles
