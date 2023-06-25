@@ -159,7 +159,7 @@ Pour la phase 2, vous pouvez choisir si vous voulez afficher la carte à chaque 
 
 ### 1.2 L'affichage 
 
-- Pour la carte : "O" est Hitman et la flèche ("^",">","v","<") représente la direction dans laquelle il regarde actuellement, idem pour "G" : Garde et "C": Civil.
+- "O" est Hitman et la flèche ("^",">","v","<") représente la direction dans laquelle il regarde actuellement, idem pour "G" : Garde et "C": Civil.
 - "X" : Non découvert
 - "A" : Arme (Corde de piano)
 - "S" : Suit ( Le déguisement)
