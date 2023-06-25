@@ -127,15 +127,19 @@ def deduction(dict_var_to_num : dict,hc : HitmanKnowledge,Clauses : ClauseBase, 
     write_dimacs_file2(temp, nb_vars, "sat.cnf")
     #on test la deduction
     res = exec_gophersat("sat.cnf")
-    print("Deduction potentielle : ", end="")
-    print(trouver_cle(dict_var_to_num, var_tester), end=" ")
+    #print("Deduction potentielle : ", end="")
+    #print(trouver_cle(dict_var_to_num, var_tester), end=" ")
     if res[0] == False:
         print(f"on deduit  : {trouver_cle(dict_var_to_num,var_tester)}")
         pos = trouver_cle(dict_var_to_num,var_tester) # On récupère les coordonnées de l'individu déduit
+        pos = (int(pos[0]),int(pos[1]))
         hc.add_knowledge(pos,HC.N)   # Ajout d'un individu déduit
+
         return  Clauses +[[var_tester]]
     elif res[0] == True:
-        print(f"on n'a pas pu déduire :  {trouver_cle(dict_var_to_num,var_tester)}")
+        #print(f"on n'a pas pu déduire :  {trouver_cle(dict_var_to_num,var_tester)}")
+        #print(f"on deduit rien", end="\r")
+        pass
 
 
 
@@ -161,6 +165,15 @@ def boucle_deduction(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : Claus
         return clauses # rien à deduire, tout est connu
     nb_vars = nb
     print("liste : ",list_var)
+    for var in list_var:
+        temp = deduction(dict_var_to_num,hc,temp, nb_vars, var)
+    return temp
+
+def boucle_deduction2(dict_var_to_num : dict,hc : HitmanKnowledge,clauses : ClauseBase, nb_vars : int) -> ClauseBase:
+    temp = clauses
+    # on prend les x qui sont pas dans les connaissance entre (0,0) et (m,n)
+    list_var = hc.get_no_knowledge_clause(dict_var_to_num)
+    #print(f"on doit tester : {list_var}")
     for var in list_var:
         temp = deduction(dict_var_to_num,hc,temp, nb_vars, var)
     return temp

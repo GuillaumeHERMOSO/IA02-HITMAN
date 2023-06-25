@@ -27,6 +27,7 @@ def ecouter(hr : HitmanReferee,dict_var_to_num) : # ecouter avec l'arbitre
     m = dico["m"]
     i,j = dico["position"]
     r = []
+    """
     min_i = max_i = min_j = max_j = 0 # initialisation des bornes i et j
     variables = []
     if (i == 0 or i == 1): # si i est dans la borne inf ou a 1 de distance de celle ci
@@ -46,7 +47,15 @@ def ecouter(hr : HitmanReferee,dict_var_to_num) : # ecouter avec l'arbitre
     for b in range(min_j, max_j):
         for a in range(min_i,max_i):
             variables.append(f"{a}{b}_P")       # on génère nos variables
-
+    """
+    # on prend les cases i,j
+    variables = []
+    # exemple en 0,0 je veux 0,1 0,2 1,0 2,0 1,1 2,2 1,2 2,1
+    for a in range(i-2,i+3):
+        for b in range(j-2,j+3):
+            if a in range(n) and b in range(m) and (a,b) != (i,j):
+                variables.append(f"{a}{b}_P")
+    
     for elt in variables :
         r.append(dict_var_to_num[elt]) # Transformation en valeurs utilisable dans SAT
     if k >= 5:
