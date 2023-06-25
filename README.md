@@ -16,6 +16,8 @@
     - [2.1 Stratégie](#21-stratégie)
     - [2.2 Modelisation STRIPS](#22-modelisation-strips)
 - [Forces et faiblesses](#forces-et-faiblesses)
+    - [3.1 Forces](#31-forces)
+    - [3.2 Faiblesses](#32-faiblesses)
 - [Lancer le projet](#lancer-le-projet)
 
 
@@ -85,7 +87,7 @@ pas utilisé car pas assez performante:
 - Pour la recherche des variables à déduire, on recupere dans notre dictionnaire de connaissances les positions sans informations et on essaye pour chacune des variables de voir si nos clauses d'ecoute nous permmettent de déduire une personne sur cette position.
 - Avant chaque boucle de deduction on instancie un nouveau fichier SAT avec les clauses d'écoutes (depuis le debut) et les clauses de connaissances (actuelles).
 - Les clauses d'écoutes sont crées à partir d'une fonction python, qui, pour chaque situation de Hitman, c'est a dire du nombre de cases autour de lui( si il est situé près d'un mur, un coin , etc...Sinon il y a un rayon d'écoute de 2 cases autour de lui (25 cases en tout)) et du nombre de personnes k écoutés, genere soit une base de clauses avec la fonction `exactly`(k,liste_variables), soit une base de clauses `at_least`(5,liste_variables) si le nombre de personnes entendues dépassait 5 ( voir fichier : `src/contraintes.py`). 
-- Du fait du nombre de clauses en fin d'exploration (~500 000), le parcours de la carte prends plus de temps avec des déductions que sans. Cependant, le solveur arrive parfois à deviner les positions des gardes et des civils sur la carte.
+- Du fait du nombre de clauses en fin d'exploration (~500 000 carte donné), le parcours de la carte prends plus de temps avec des déductions que sans. Cependant, le solveur arrive parfois à deviner les positions des gardes et des civils sur la carte.
 
   
 #### 1.3.2 Problèmes rencontrés 
@@ -118,7 +120,7 @@ Notre modelisation est diponible dans le fichier `ModélisationSTRIPS.pdf`
 
 ## Forces et Faiblesses
 
-### Forces : 
+### 3.1 Forces
 - La phase 1 est fonctionnelle et permet de découvrir toute les informations sur la carte.
 - La phase 1 peut être utilisée avec ou sans SAT.
 - La phase 2 est fonctionnelle et permet de repondre à la mission.
@@ -126,7 +128,7 @@ Notre modelisation est diponible dans le fichier `ModélisationSTRIPS.pdf`
 - Interface graphique pratique et efficace ( on sait ce qu'on voit, ce qu'il reste à voir,l'orientation des gardes, des civils et du joueur ).
 
 
-### Faiblesses  : 
+### 3.2 Faiblesses
 - Déductions du solveur SAT chronophage ( phase 1) ( 30 000 fois superieur pour la carte founis : 0,008 s sans SAT contre 294,76 s).
 - SAT pas toujours rentable en score (Un score de 0 pour la carte founis avec SAT contre 4 sans SAT).
 - Fonctions heuristiques à améliorer (certaines configurations de cartes nous font perdres beaucoup de points).
