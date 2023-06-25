@@ -69,16 +69,20 @@ pas utilisé car pas assez performante:
 
 Nous souhaitions utiliser le solveur SAT afin de déduire des informations, nous avons rencontrés plusieurs problèmes lors de son implémentation tel que : 
 - La réecriture impossible d'un fichier SAT à partir de lui même (ce qui nous a contraint à devoir écrire un nouveau fichier de zéro à chaque fois et exploser le temps de calcul )
-- Une gestion abérrante du nombre de clauses : Plus la map est grande, plus le nombre de clauses explose, ce qui nous a limité seulement à l'utilisation du solveur à la potentielle déduction des personnes (gardes et invités ) avec les clauses d'écoutes.
-- Le plan était le suivant : 
-
+- Une gestion abérrante du nombre de clauses : Plus la carte est grande, plus le nombre de clauses explose, ce qui nous a limité seulement à l'utilisation du solveur à la potentielle déduction des personnes (gardes et invités ) avec les clauses d'écoutes.
+- Le plan était le suivant :
+  
     1) Trouver une/des variable(s) à déduire, les implémenter dans une liste
     2) Pour chaque élément de la liste, tester sa négation et voir si le solveur renvoie insatisfiable
     3) Si oui : inclure la nouvelle variable dans notre dico de connaissances et également dans nos clauses (en tant que clause unitaire)
     4) Si non : Ne rien déduire
-- Pour la recherche des variables à déduire, nous nous étions limité aux variables dont la liste de clause possède pas déjà et qui ne sont pas déjà des clauses unitaires ( les variables qui sont présentes donc dans les clauses d'écoute), cela permettait de ne vouloir déduire que ce qui a déjà été évoqué.
-- Le tableau de clause (ClauseBase donc liste de liste ) ne contenait que des clauses référents à des personnes soit vu par Hitman (unitaires) soit écoutés.
-- La déduction a petit a petit commencé a devenir impossible du fait du nombre de clauses en fin d'exploration (~500 000), ce qui empêchait de continuer le parcours de la map (il fallait attendre plusieurs minutes par itération pour la map d'exemple qui est assez petite) .
+- La nature des variables étaient des coordonées de personnes potentielles ( du type "ij_P") qui était convertit en entier (admissible pour le solveur) avec un dictionnaire de conversion position-> valeur avec la clé la position potentielle et la valeur de cette clé un entier. Une valeur valait donc une position potentielle d'une personne. 
+- Pour la recherche des variables à déduire, nous nous étions limité aux variables dont la base de clauses possède pas déjà et qui ne sont pas déjà des clauses unitaires ( 
+ on ne pren que des variables qui sont présentes donc dans les clauses d'écoute), cela permettait de ne vouloir déduire que ce qui a déjà été évoqué.
+- Le tableau de clause (ClauseBase donc List[List[int]]) ne contenait que des clauses référents à des personnes soit vu par Hitman (unitaires) soit écoutés.
+- Les clauses d'écoute sont créer à partir d'une fonction python, qui, pour chaque situation de Hitman, c'est a dire du nombre de cases autour de lui( si il est situé près d'un mur, un coin , etc...Sinon il y a un rayon d'écoute de 2 cases autour de lui (25 cases en tout)) et du nombre de personnes k écoutés, générait soit une base de clauses avec la fonction exactly(k,liste_variables), soit une base de clauses at_least(5,liste_variables) si le nombre de personnes entendues dépassait 5. 
+- La déduction a petit a petit commencé a devenir impossible du fait du nombre de clauses en fin d'exploration (~500 000), ce qui empêchait de continuer le parcours de la map (il fallait attendre plusieurs minutes par itération pour la carte d'exemple qui est assez petite). Cependant, le solveur arrivait parfois à deviner les positions des gardes et des civils sur la carte, il fallait lui laisser du temps.
+- 
 
 C'est à causes de ces multiples problèmes que nous avons décidés de ne pas inclure la déduction par solveur SAT lors de la phase 1. 
 
