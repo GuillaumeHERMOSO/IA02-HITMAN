@@ -65,7 +65,7 @@ pas utilisé car pas assez performante:
 
 
 
-### Sat
+### Modélisation SAT
 
 Nous souhaitions utiliser le solveur SAT afin de déduire des informations, nous avons rencontrés plusieurs problèmes lors de son implémentation tel que : 
 - La réecriture impossible d'un fichier SAT à partir de lui même (ce qui nous a contraint à devoir écrire un nouveau fichier de zéro à chaque fois et exploser le temps de calcul )
