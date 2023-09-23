@@ -5,7 +5,6 @@
 - HERMOSO Guillaume
 
 
-
 ## Sommaire:
 - [Prérequis](#prérequis)
 - [Phase 1](#phase-1)
