@@ -48,8 +48,6 @@ def main_phase1_2() -> None:
     con.knowledge = status[3]
     phase2(hr,con,affichage=True, temp=temp)
 
-    #fini
-
 
 if __name__ == "__main__":
     #main_phase1()
