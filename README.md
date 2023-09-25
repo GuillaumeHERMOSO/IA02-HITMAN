@@ -27,17 +27,6 @@ Avant d'exécuter le code, assurez-vous d'avoir les éléments suivants :
 - **Le fichier hitman.py doit se trouver dans le dossier 'src/arbitre/'.**
 - **L'executable gophersat doit se trouver dans le meme dossier que main.py**
 
-- Les modules suivants doivent être installés :
-    - `os`
-    - `pprint`
-    - `random`
-    - `time`
-    - `itertools`
-    - `typing`
-    - `sys`
-    - `copy`
-    - `subprocess`
-
 
 ## Phase 1
 
