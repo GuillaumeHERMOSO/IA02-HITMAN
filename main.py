@@ -12,9 +12,9 @@ from src.clause_dynamique import *
 
 
 def main_phase1() -> None:
-    """ Fonction qui permet de lancer que la phase 1"""
+    """Fonction qui permet de lancer que la phase 1"""
     hr = HitmanReferee()
-    con = phase1(hr,affichage=False, sat =True)
+    con = phase1(hr, affichage=False, sat=True)
     status = hr.send_content(con.get_all_knowledge())
     status = hr.end_phase1()
     pprint(status)
@@ -22,7 +22,7 @@ def main_phase1() -> None:
 
 
 def main_phase2() -> None:
-    """ Fonction qui permet de lancer que la phase 2"""
+    """Fonction qui permet de lancer que la phase 2"""
     hr = HitmanReferee()
     status = hr.start_phase1()
     n = status["n"]
@@ -33,10 +33,11 @@ def main_phase2() -> None:
     con.knowledge = status[3]
 
     hr.start_phase2()
-    phase2(hr,con,affichage=True)
+    phase2(hr, con, affichage=True)
+
 
 def main_phase1_2() -> None:
-    """ Fonction qui permet de lancer la phase 1 et la phase 2"""
+    """Fonction qui permet de lancer la phase 1 et la phase 2"""
     hr = HitmanReferee()
     status = hr.start_phase1()
 
@@ -46,10 +47,10 @@ def main_phase1_2() -> None:
     status = hr.end_phase1()
 
     con.knowledge = status[3]
-    phase2(hr,con,affichage=True, temp=temp)
+    phase2(hr, con, affichage=True, temp=temp)
 
 
 if __name__ == "__main__":
-    #main_phase1()
-    #main_phase2()
+    # main_phase1()
+    # main_phase2()
     main_phase1_2()
